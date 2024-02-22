@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
     suspend fun insert(user: User)
     suspend fun getAllUsers(): Flow<List<User>>
-    suspend fun getUser(email: String): Flow<User>
+    suspend fun getUser(email: String): User?
 }
 
 class OfflineUserRepository(
@@ -18,6 +18,6 @@ class OfflineUserRepository(
     override suspend fun getAllUsers(): Flow<List<User>> =
         userDao.getAllUsers()
 
-    override suspend fun getUser(email: String): Flow<User> =
+    override suspend fun getUser(email: String): User? =
         userDao.getUser(email = email)
 }

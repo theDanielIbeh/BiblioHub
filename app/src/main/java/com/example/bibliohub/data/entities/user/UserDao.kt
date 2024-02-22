@@ -19,5 +19,5 @@ interface UserDao {
     @Query(
         "SELECT * FROM user where email = :email"
     )
-    fun getUser(email: String): Flow<User>
+    fun getUser(email: String): User?
 }

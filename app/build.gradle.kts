@@ -79,4 +79,8 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
     kaptTest("com.google.dagger:hilt-android-compiler:2.48")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }

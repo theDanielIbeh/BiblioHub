@@ -1,47 +1,51 @@
 package com.example.bibliohub.fragments.login
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.example.bibliohub.data.BiblioHubDatabase
-import com.example.bibliohub.data.entities.user.OfflineUserRepository
-import com.example.bibliohub.data.entities.user.UserDao
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.bibliohub.BiblioHubApplication
+import com.example.bibliohub.data.BiblioHubPreferencesRepository
+import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
-import kotlinx.coroutines.launch
+import com.example.bibliohub.utils.Constants
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class LoginModel(
-    var firstName: String = "",
-    var lastName: String = "",
     var email: String = "",
-    var password: String = ""
+    var password: String = "",
 )
 
 class LoginViewModel(
-    private val application: Application,
+    private val userRepository: UserRepository,
+    val biblioHubPreferencesRepository: BiblioHubPreferencesRepository,
 ) : ViewModel() {
-    var loginModel: LoginModel = LoginModel()
-    private val userDao: UserDao = BiblioHubDatabase.getInstance(application).userDao()
-    private val userRepository: UserRepository = OfflineUserRepository(userDao = userDao)
+    private var _loginModel: MutableStateFlow<LoginModel> = MutableStateFlow(LoginModel())
+    val loginModel: StateFlow<LoginModel> = _loginModel.asStateFlow()
 
-    fun getUserDetails(email: String) {
-        viewModelScope.launch {
-            userRepository.getUser(email = email)
-        }
+    suspend fun getUserDetails(email: String): User? {
+        return userRepository.getUser(email = email)
     }
 
     fun resetLoginModel() {
-        loginModel = LoginModel()
+        _loginModel.value = LoginModel()
     }
-
-    class LoginViewModelFactory(
-        private val application: Application
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                return LoginViewModel(application = application) as T
+    suspend fun savePreferences(it: User) {
+        biblioHubPreferencesRepository.savePreference(Constants.USER, it)
+        biblioHubPreferencesRepository.savePreference(Constants.IS_LOGGED_IN, true)
+    }
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
+                val userRepository = application.container.userRepository
+                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
+                LoginViewModel(userRepository = userRepository, biblioHubPreferencesRepository = biblioHubPreferencesRepository)
             }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
