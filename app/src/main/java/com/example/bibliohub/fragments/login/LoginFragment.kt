@@ -82,17 +82,17 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    private fun FragmentLoginBinding.proceedToHomePage(
+    private fun proceedToHomePage(
         email: String,
         password: String
     ) {
         lifecycleScope.launch {
             val user =
-                withContext(Dispatchers.IO) { viewModel?.getUserDetails(email = email) }
+                withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
             if (user != null) {
                 if (user.password == password) {
-                    viewModel?.resetLoginModel()
-                    viewModel?.savePreferences(user)
+                    viewModel.resetLoginModel()
+                    viewModel.savePreferences(user)
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 } else {
                     binding.passwordLayout.error = "Incorrect password"
