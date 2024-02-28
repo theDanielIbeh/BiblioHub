@@ -51,6 +51,7 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -83,4 +84,23 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    // Paging 3 Integration
+    implementation("androidx.paging:paging-runtime-ktx:${rootProject.extra["paging_version"]}")
+    // alternatively - without Android dependencies for tests
+    testImplementation("androidx.paging:paging-common-ktx:${rootProject.extra["paging_version"]}")
+    // optional - RxJava2 support
+    implementation("androidx.paging:paging-rxjava2-ktx:${rootProject.extra["paging_version"]}")
+    // optional - RxJava3 support
+    implementation("androidx.paging:paging-rxjava3:${rootProject.extra["paging_version"]}")
+    // optional - Guava ListenableFuture support
+    implementation("androidx.paging:paging-guava:${rootProject.extra["paging_version"]}")
+
+    //LiveData
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:2.6.1")
+
 }

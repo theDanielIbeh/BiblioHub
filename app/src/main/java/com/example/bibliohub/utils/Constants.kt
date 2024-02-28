@@ -6,4 +6,11 @@ class Constants private constructor() {
         const val USER = "user"
         const val IS_LOGGED_IN = "is_logged_in"
     }
+
+    enum class Status {
+        PENDING,
+        COMPLETED,
+        APPROVED,
+        REJECTED
+    }
 }

@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         val isLoggedIn = viewModel.biblioHubPreferencesRepository.getPreference(Boolean::class.java, IS_LOGGED_IN)
         lifecycleScope.launch {
             isLoggedIn.collect {
-                Log.d("isLoggedIn", it.toString())
                 if (it == true) {
                     navGraph.setStartDestination(startDestId = R.id.homeFragment)
                 } else {

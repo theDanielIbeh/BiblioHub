@@ -13,4 +13,10 @@
     <string name="new_user_message">New to BiblioHub?</string>
     <string name="existing_user_message">Already Registered?</string>
     <string name="register"><u>Register</u></string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="update_cart">Update Cart</string>
+    <string name="decrease">Decrease</string>
+    <string name="increase">Increase</string>
+    <string name="quantity_input">Quantity Input</string>
+    <string name="invalidate_search">Invalidate Search</string>
 </resources>
