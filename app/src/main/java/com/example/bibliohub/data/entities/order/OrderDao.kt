@@ -13,4 +13,9 @@ interface OrderDao {
 
     @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
     fun getActiveOrderByUserId(userId: Int): Flow<Order?>
+
+    @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
+    suspend fun getStaticActiveOrderByUserId(userId: Int): Order?
+
+
 }
