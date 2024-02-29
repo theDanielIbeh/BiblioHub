@@ -2,7 +2,6 @@ package com.example.bibliohub.data.entities.orderDetails
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 @Entity(tableName = "order_details", primaryKeys = ["order_id","product_id"])
 data class OrderDetails(
