@@ -56,32 +56,23 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
     }
 
     override fun initRecycler() {
-        adapter = HomePagingDataAdapter(requireContext(), this, viewModel.cart.value)
-        lifecycleScope.launch {
-            viewModel.products.collectLatest { pagingData ->
-                // submitData suspends until loading this generation of data stops
-                // so be sure to use collectLatest {} when presenting a Flow<PagingData>
-                adapter.submitData(lifecycle, pagingData)
-
-                viewModel.cart.collectLatest {
-                    Log.d("FragmentInit", it.toString())
-                    if (it != null) {
-                        if (it.isNotEmpty())
-                            adapter.cart = it
-                    }
-                }
-            }
+        viewModel.initOrderDetails {
+            adapter = HomePagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
+            lifecycleScope.launch {
+                viewModel.products.collectLatest { pagingData ->
+                    // submitData suspends until loading this generation of data stops
+                    // so be sure to use collectLatest {} when presenting a Flow<PagingData>
+                    adapter.submitData(lifecycle, pagingData) } }
+            binding.recyclerView.layoutManager = LinearLayoutManager(context)
+            binding.recyclerView.itemAnimator = DefaultItemAnimator()
+            binding.recyclerView.adapter = adapter
+            (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
+                false
         }
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.itemAnimator = DefaultItemAnimator()
-        binding.recyclerView.adapter = adapter
-        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
-            false
     }
 
-    override fun addToCart(product: Product, quantity: String) {
-        viewModel.createNewOrderDetail(product = product, quantity = quantity)
+    override fun addOrUpdateCart(product: Product, quantity: Int) {
+        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity)
     }
 
     private fun refresh() {

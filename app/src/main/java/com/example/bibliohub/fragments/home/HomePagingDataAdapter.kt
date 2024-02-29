@@ -1,10 +1,10 @@
 package com.example.bibliohub.fragments.home
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getString
+import androidx.core.widget.doAfterTextChanged
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +27,7 @@ object JokeComparator : DiffUtil.ItemCallback<Product>() {
 class HomePagingDataAdapter(
     private val context: Context,
     private val listener: HomeListener,
-    var cart: List<OrderDetails>?,
+    private val itemsInCart: List<OrderDetails>,
 ) :
     PagingDataAdapter<Product, HomePagingDataAdapter.HomeViewHolder>(JokeComparator) {
     /**
@@ -55,25 +55,79 @@ class HomePagingDataAdapter(
     inner class HomeViewHolder(private val binding: HomeRecyclerItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product?, position: Int) {
+            fun updateOrderQtyView(orderQty: Int) {
+                binding.quantityEditText.setText(orderQty.toString())
+            }
+
+            fun isMainButtonEnabled(isEnabled: Boolean) {
+                binding.addToCartButton.isEnabled = isEnabled
+            }
             try {
                 if (product == null) {
                     return
                 }
-                Log.d("Cart", cart.toString())
-                val isInCart = cart?.any { orderDetails -> orderDetails.productId == product.id }
-                if (isInCart == true) {
-                    binding.addToCartButton.text =
+                //to be used to track order info
+                val userItemInCart = itemsInCart.firstOrNull { it.productId == product.id }
+                //get existing order quantity else assign to 0
+                var orderQuantity = userItemInCart?.quantity ?: 0
+                val isInCart = userItemInCart != null
+                val cartButtonText =
+                    if (isInCart) {
                         getString(context, R.string.update_cart)
-                }
+                    } else {
+                        getString(context, R.string.add_to_cart)
+                    }
+                //disable main button so user doesn't add to cart with qty of 0
+                isMainButtonEnabled(false)
 
+                //setup cart qty control
+                binding.addBtn.setOnClickListener {
+                    val currentDisplayedQty =
+                        binding.quantityEditText.text.toString().toIntOrNull() ?: 0
+                    updateOrderQtyView(currentDisplayedQty + 1)
+                }
+                binding.subtractBtn.setOnClickListener {
+                    // to make sure order qty doesn't go below 0
+                    val currentDisplayedQty =
+                        binding.quantityEditText.text.toString().toIntOrNull() ?: 0
+                    if (currentDisplayedQty == 0) {
+                        return@setOnClickListener
+                    }
+                    updateOrderQtyView(currentDisplayedQty - 1)
+                }
+                binding.quantityEditText.doAfterTextChanged {
+                    //check quantity change and activate button
+                    val enteredQuantity = it.toString().toIntOrNull() ?: 0
+                    //check if what user entered is equal to size of item in cart
+                    if (enteredQuantity == (userItemInCart?.quantity?:0)) {
+                        isMainButtonEnabled(false)
+                        return@doAfterTextChanged
+                    }
+                    isMainButtonEnabled(
+                        //if item is in cart activate button when quantity changes
+                        if (isInCart) {
+                            true
+                        } else {
+                            //if item not in cart ensure quantity is more than 0
+                            //before user can add to cart
+                            enteredQuantity > 0
+                        }
+                    )
+                    //update order quantity
+                    orderQuantity = enteredQuantity
+                }
+                binding.addToCartButton.text = cartButtonText
                 binding.nameTextView.text = product.name
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price
+                //make sure order quantity view has item to display
+                updateOrderQtyView(orderQuantity)
+
 
                 binding.addToCartButton.setOnClickListener {
-                    listener.addToCart(
+                    listener.addOrUpdateCart(
                         product,
-                        binding.priceTextView.text.toString()
+                        orderQuantity
                     )
                     notifyItemChanged(position)
                 }
@@ -86,6 +140,6 @@ class HomePagingDataAdapter(
     }
 
     interface HomeListener {
-        fun addToCart(product: Product, quantity: String)
+        fun addOrUpdateCart(product: Product, quantity: Int)
     }
 }
