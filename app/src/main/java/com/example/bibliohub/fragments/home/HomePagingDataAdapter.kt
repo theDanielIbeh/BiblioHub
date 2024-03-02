@@ -8,12 +8,13 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.orderDetails.OrderDetails
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.HomeRecyclerItemBinding
 
-object JokeComparator : DiffUtil.ItemCallback<Product>() {
+object ProductComparator : DiffUtil.ItemCallback<Product>() {
     override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
         // Id is unique.
         return oldItem.id == newItem.id
@@ -29,7 +30,7 @@ class HomePagingDataAdapter(
     private val listener: HomeListener,
     private val itemsInCart: List<OrderDetails>,
 ) :
-    PagingDataAdapter<Product, HomePagingDataAdapter.HomeViewHolder>(JokeComparator) {
+    PagingDataAdapter<Product, HomePagingDataAdapter.HomeViewHolder>(ProductComparator) {
     /**
      * Create new views (invoked by the layout manager)
      */
@@ -66,6 +67,10 @@ class HomePagingDataAdapter(
                 if (product == null) {
                     return
                 }
+
+                Glide.with(context).load(product.imgSrc)
+                    .into(binding.memberImageView)
+
                 //to be used to track order info
                 val userItemInCart = itemsInCart.firstOrNull { it.productId == product.id }
                 //get existing order quantity else assign to 0
@@ -77,6 +82,12 @@ class HomePagingDataAdapter(
                     } else {
                         getString(context, R.string.add_to_cart)
                     }
+                val cartButtonColor =
+                    if (isInCart) {
+                        context.getColor(R.color.darkBlue)
+                    } else {
+                        context.getColor(R.color.lightGreen)
+                    }
                 //disable main button so user doesn't add to cart with qty of 0
                 isMainButtonEnabled(false)
 
@@ -84,7 +95,9 @@ class HomePagingDataAdapter(
                 binding.addBtn.setOnClickListener {
                     val currentDisplayedQty =
                         binding.quantityEditText.text.toString().toIntOrNull() ?: 0
-                    updateOrderQtyView(currentDisplayedQty + 1)
+                    if (currentDisplayedQty < product.quantity) {
+                        updateOrderQtyView(currentDisplayedQty + 1)
+                    }
                 }
                 binding.subtractBtn.setOnClickListener {
                     // to make sure order qty doesn't go below 0
@@ -99,7 +112,7 @@ class HomePagingDataAdapter(
                     //check quantity change and activate button
                     val enteredQuantity = it.toString().toIntOrNull() ?: 0
                     //check if what user entered is equal to size of item in cart
-                    if (enteredQuantity == (userItemInCart?.quantity?:0)) {
+                    if (enteredQuantity == (userItemInCart?.quantity ?: 0)) {
                         isMainButtonEnabled(false)
                         return@doAfterTextChanged
                     }
@@ -117,6 +130,7 @@ class HomePagingDataAdapter(
                     orderQuantity = enteredQuantity
                 }
                 binding.addToCartButton.text = cartButtonText
+                binding.addToCartButton.setBackgroundColor(cartButtonColor)
                 binding.nameTextView.text = product.name
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price

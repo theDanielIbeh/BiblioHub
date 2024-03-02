@@ -7,12 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="0dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="20dp"
+            app:contentPaddingBottom="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -21,45 +22,119 @@
                 android:id="@+id/content_constraint_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:paddingBottom="0dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/memberImageView"
-                    android:layout_width="81dp"
-                    android:layout_height="92dp"
-                    app:srcCompat="@drawable/ic_launcher_background"
+                    android:layout_width="128dp"
+                    android:layout_height="133dp"
+                    app:contentPaddingTop="0dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_launcher_background" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/auditDateValueTextView"
+                    android:id="@+id/name_text_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text=""
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textStart"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/memberImageView"
-                    app:layout_constraintTop_toTopOf="@+id/memberImageView" />
+                    app:layout_constraintTop_toTopOf="@+id/memberImageView"
+                    tools:text="Book" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/icoNameValueTextView"
+                    android:id="@+id/author_text_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text=""
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/memberImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/auditDateValueTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/name_text_view"
+                    tools:text="Book" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/staffIdValueTextView"
+                    android:id="@+id/price_text_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text=""
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/memberImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/icoNameValueTextView" />
+                    app:layout_constraintTop_toBottomOf="@id/author_text_view"
+                    tools:text="Book" />
+
+                <ImageView
+                    android:id="@+id/subtract_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/decrease"
+                    android:src="@drawable/subtract"
+                    app:layout_constraintBottom_toBottomOf="@+id/quantity_layout"
+                    app:layout_constraintEnd_toStartOf="@id/quantity_layout"
+                    app:layout_constraintTop_toTopOf="@+id/quantity_layout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/quantity_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/memberImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/price_text_view">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/quantity_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:textAlignment="center" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/add_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/increase"
+                    android:src="@drawable/add"
+                    app:layout_constraintBottom_toBottomOf="@+id/quantity_layout"
+                    app:layout_constraintStart_toEndOf="@id/quantity_layout"
+                    app:layout_constraintTop_toTopOf="@+id/quantity_layout" />
+
+                <Button
+                    android:id="@+id/delete_from_cart_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hapticFeedbackEnabled="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/remove_from_cart"
+                    android:textColor="@color/white"
+                    app:cornerRadius="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/quantity_layout" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

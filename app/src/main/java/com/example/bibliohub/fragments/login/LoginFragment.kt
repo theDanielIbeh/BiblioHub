@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
                 if (user.password == password) {
                     viewModel.resetLoginModel()
                     viewModel.savePreferences(user)
-                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    findNavController().navigate(R.id.homeFragment)
                 } else {
                     binding.passwordLayout.error = "Incorrect password"
                 }

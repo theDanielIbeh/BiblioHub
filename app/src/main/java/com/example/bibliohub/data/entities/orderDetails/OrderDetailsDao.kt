@@ -15,11 +15,9 @@ interface OrderDetailsDao {
     suspend fun insertOrUpdate(orderDetails: OrderDetails)
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
-    fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>?>
+    fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>>
 
-    @Query("SELECT * FROM `order_details` WHERE order_id =:orderID")
-    fun getOpenOrderDetails(orderID: Int):  Flow<List<OrderDetails>>
-    @Query("DELETE FROM `order_details` WHERE order_id =:orderID AND " +
-            "product_id =:productID")
-    suspend fun deleteOrderDetailsByOrderAndProductID(orderID: Int, productID:Int)
+    @Query("DELETE FROM order_details WHERE order_id = :orderId AND " +
+            "product_id = :productId")
+    suspend fun deleteOrderDetailsByOrderAndProductID(orderId: Int, productId:Int)
 }

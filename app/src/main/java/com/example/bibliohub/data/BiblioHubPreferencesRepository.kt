@@ -140,4 +140,8 @@ class BiblioHubPreferencesRepository(
                 }
 
             }
+
+    suspend fun clearDataStore(){
+        datastore.edit { it.clear() }
+    }
 }

@@ -15,8 +15,12 @@
     <string name="register"><u>Register</u></string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="update_cart">Update Cart</string>
+    <string name="remove_from_cart">Remove from Cart</string>
     <string name="decrease">Decrease</string>
     <string name="increase">Increase</string>
     <string name="quantity_input">Quantity Input</string>
     <string name="invalidate_search">Invalidate Search</string>
+    <string name="home">Home</string>
+    <string name="cart">Cart</string>
+    <string name="log_out">Log out</string>
 </resources>

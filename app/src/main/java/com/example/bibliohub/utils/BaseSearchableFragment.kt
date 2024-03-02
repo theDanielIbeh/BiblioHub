@@ -20,10 +20,10 @@ import com.google.android.material.textfield.TextInputEditText
 abstract class BaseSearchableFragment<T> : Fragment() {
 
     // Provide the viewModel's filter text
-    abstract var viewModelFilterText: String?
+    open var viewModelFilterText: String? = null
 
     // Provide method search method to run after text change
-    abstract val searchCallback: ((String) -> Unit)?
+    open val searchCallback: ((String) -> Unit)? = null
 
     // Provide binding's search button/image
     abstract val searchButton: ImageButton?
