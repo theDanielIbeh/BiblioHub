@@ -9,7 +9,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -18,11 +20,15 @@ import com.example.bibliohub.utils.Constants.Companion.IS_ADMIN
 import com.example.bibliohub.utils.Constants.Companion.IS_LOGGED_IN
 import kotlinx.coroutines.launch
 
+
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -52,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 navController.setGraph(navGraph, intent.extras)
             }
         }
-//        setMenu()
+        setMenu()
     }
 
     private fun setMenu() {
@@ -66,30 +72,20 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
-                val home = menu.findItem(R.id.home_item)
-                home.icon?.setTint(resources.getColor(R.color.darkBlue))
-            }
-
-            override fun onPrepareMenu(menu: Menu) {
-                super.onPrepareMenu(menu)
-                val menuItems = arrayListOf(R.id.home_item, R.id.cart_item)
-                menuItems.forEach { id ->
-                    val item = menu.findItem(id)
-                    item.icon?.setTint(resources.getColor(R.color.lightGrey))
-                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 // Handle the menu selection
-//                resetMenuItemColors(menuItem.itemId)
+                resetMenuItemColors(menuItem.itemId)
                 Log.d("MainActivity", menuItem.itemId.toString())
-                menuItem.icon?.setColorFilter(
-                    getColor(R.color.darkBlue),
-                    PorterDuff.Mode.SRC_IN
-                )
                 return when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
                     R.id.home_item -> {
-                        navController.popBackStack(R.id.homeFragment, true)
+                        navController.popBackStack(R.id.homeFragment, false)
                         true
                     }
 
@@ -112,18 +108,18 @@ class MainActivity : AppCompatActivity() {
         }, this, Lifecycle.State.RESUMED)
     }
 
-//    @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
-//    private fun resetMenuItemColors(selectedId: Int) {
-//        val home = findViewById<ActionMenuItemView>(R.id.home_item)
-//        home.setIcon(getDrawable(R.drawable.home))
-//        val cart = findViewById<ActionMenuItemView>(R.id.cart_item)
-//        cart.setIcon(getDrawable(R.drawable.cart))
-//        if (home.id == selectedId) {
-//            home.setBackgroundColor(resources.getColor(R.color.darkBlue))
-//            cart.setBackgroundColor(resources.getColor(R.color.disabled))
-//        } else{
-//            home.setBackgroundColor(resources.getColor(R.color.disabled))
-//            cart.setBackgroundColor(resources.getColor(R.color.darkBlue))
-//        }
-//    }
+    @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
+    private fun resetMenuItemColors(selectedId: Int) {
+        val home = findViewById<ActionMenuItemView>(R.id.home_item)
+        home.setIcon(getDrawable(R.drawable.home))
+        val cart = findViewById<ActionMenuItemView>(R.id.cart_item)
+        cart.setIcon(getDrawable(R.drawable.cart))
+        if (home.id == selectedId) {
+            home.setBackgroundColor(resources.getColor(R.color.darkBlue))
+            cart.setBackgroundColor(resources.getColor(R.color.disabled))
+        } else{
+            home.setBackgroundColor(resources.getColor(R.color.disabled))
+            cart.setBackgroundColor(resources.getColor(R.color.darkBlue))
+        }
+    }
 }

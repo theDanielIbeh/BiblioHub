@@ -1,13 +1,18 @@
 package com.example.bibliohub.fragments.home
 
+import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.filter
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -18,12 +23,10 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentHomeBinding
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.HomeListener {
 
@@ -46,6 +49,15 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
 
         searchButton = binding.imageButtonStopSearch
         searchText = binding.etSearch
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val home = activity?.findViewById<ActionMenuItemView>(R.id.home_item)
+        home?.setBackgroundColor(resources.getColor(R.color.darkBlue))
+        val cart = activity?.findViewById<ActionMenuItemView>(R.id.cart_item)
+        cart?.setBackgroundColor(resources.getColor(R.color.disabled))
     }
 
     override fun initCompulsoryVariables() {
@@ -71,8 +83,15 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
                     // so be sure to use collectLatest {} when presenting a Flow<PagingData>
                     if (viewModel.selectedCategory?.isEmpty() == true) {
                         adapter.submitData(lifecycle, pagingData)
-                    }else{
-                        adapter.submitData(lifecycle, pagingData.filter { product -> product.category.equals(other = viewModel.selectedCategory, ignoreCase = true) })
+                    } else {
+                        adapter.submitData(
+                            lifecycle,
+                            pagingData.filter { product ->
+                                product.category.equals(
+                                    other = viewModel.selectedCategory,
+                                    ignoreCase = true
+                                )
+                            })
                     }
                     adapter.loadStateFlow.map { it.refresh }
                         .distinctUntilChanged()
@@ -100,6 +119,14 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
 
     override fun addOrUpdateCart(product: Product, quantity: Int) {
         viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity)
+    }
+
+    override fun viewProduct(product: Product) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToProductDetailsFragment(
+                product = product
+            )
+        )
     }
 
     private fun refresh() {

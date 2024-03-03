@@ -146,6 +146,10 @@ class HomePagingDataAdapter(
                     notifyItemChanged(position)
                 }
 
+                binding.memberImageView.setOnClickListener {
+                    listener.viewProduct(product = product)
+                }
+
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -155,5 +159,6 @@ class HomePagingDataAdapter(
 
     interface HomeListener {
         fun addOrUpdateCart(product: Product, quantity: Int)
+        fun viewProduct(product: Product)
     }
 }

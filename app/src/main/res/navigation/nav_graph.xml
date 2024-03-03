@@ -23,7 +23,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.bibliohub.fragments.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.example.bibliohub.fragments.cart.CartFragment"
@@ -34,4 +38,13 @@
         android:name="com.example.bibliohub.fragments.adminHome.AdminHomeFragment"
         android:label="fragment_admin_home"
         tools:layout="@layout/fragment_admin_home" />
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.bibliohub.fragments.productDetails.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" >
+        <argument
+            android:name="product"
+            app:argType="com.example.bibliohub.data.entities.product.Product" />
+    </fragment>
 </navigation>
