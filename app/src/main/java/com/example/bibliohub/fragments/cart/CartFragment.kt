@@ -34,9 +34,6 @@ class CartFragment : BaseSearchableFragment<Product>(), CartPagingDataAdapter.Ca
         binding = FragmentCartBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
-
-        searchButton = binding.imageButtonStopSearch
-        searchText = binding.etSearch
     }
 
     override fun initCompulsoryVariables() {
@@ -47,15 +44,14 @@ class CartFragment : BaseSearchableFragment<Product>(), CartPagingDataAdapter.Ca
     }
 
     override fun setBinding() {
-        binding.btn.setOnClickListener { refresh() }
     }
 
     override fun initRecycler() {
         viewModel.initOrderDetails {
             adapter = CartPagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
             lifecycleScope.launch {
-                var idList = mutableListOf<Int>()
-                viewModel.userOrderDetails.forEach { it -> idList.add(it.productId) }
+                val idList = mutableListOf<Int>()
+                viewModel.userOrderDetails.forEach { idList.add(it.productId) }
                 viewModel.products(idList).collectLatest { pagingData ->
                     // submitData suspends until loading this generation of data stops
                     // so be sure to use collectLatest {} when presenting a Flow<PagingData>
@@ -76,9 +72,5 @@ class CartFragment : BaseSearchableFragment<Product>(), CartPagingDataAdapter.Ca
 
     override fun deleteFromCart(productId: Int) {
         viewModel.deleteFromCart(productId)
-    }
-
-    private fun refresh() {
-        viewModel.insertProducts()
     }
 }

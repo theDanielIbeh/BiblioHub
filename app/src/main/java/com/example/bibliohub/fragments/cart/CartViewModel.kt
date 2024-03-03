@@ -32,6 +32,7 @@ class CartViewModel(
 
     //Variables to hold order information
     private lateinit var currentOrder: Order
+    var orderSum: Double? = null
     internal lateinit var userOrderDetails: List<OrderDetails>
 
     init {
@@ -57,6 +58,10 @@ class CartViewModel(
                 orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
                     //clear list in the event list is holding other objects
                     userOrderDetails = it
+
+                    orderSum = it.sumOf { orderDetails ->
+                        (orderDetails.price.toDoubleOrNull() ?: 0.0) * orderDetails.quantity
+                    }
                     //run callback after order details initialized
                     onOrderDetailsInitialized()
                 }

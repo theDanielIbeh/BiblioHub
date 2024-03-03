@@ -4,6 +4,7 @@
     <string name="register_title">Join Us!</string>
     <string name="login_desc">Enter your username and password to proceed. Happy Reading!</string>
     <string name="register_desc">Fill in the required details below, to proceed. Happy Reading!</string>
+    <string name="checkout_desc">Please enter your delivery and payment details</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
@@ -23,4 +24,21 @@
     <string name="home">Home</string>
     <string name="cart">Cart</string>
     <string name="log_out">Log out</string>
+    <string name="all">All</string>
+    <string name="description">Description</string>
+    <string name="address">Address</string>
+    <string name="postcode">Postcode</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvv">CVV</string>
+    <string name="pin">PIN</string>
+    <string name="card_number">Card Number</string>
+    <string name="ok">OK</string>
+    <string name="payment_complete">Payment Complete!</string>
+    <string name="payment_complete_desc">Click OK to proceed to the home page</string>
+    <string name="fiction">Fiction</string>
+    <string name="non_fiction">Non-fiction</string>
+    <string name="y_results">%s result(s)</string>
+    <string name="search">Search</string>
+    <string name="cancel_icon">Cancel Icon</string>
+    <string name="dropdown_icon">Dropdown Icon</string>
 </resources>

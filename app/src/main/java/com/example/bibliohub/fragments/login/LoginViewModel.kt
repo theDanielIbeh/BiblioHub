@@ -37,6 +37,11 @@ class LoginViewModel(
         biblioHubPreferencesRepository.savePreference(Constants.USER, it)
         biblioHubPreferencesRepository.savePreference(Constants.IS_LOGGED_IN, true)
     }
+
+    suspend fun saveAdminPreferences() {
+        biblioHubPreferencesRepository.savePreference(Constants.IS_ADMIN, true)
+        biblioHubPreferencesRepository.savePreference(Constants.IS_LOGGED_IN, true)
+    }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

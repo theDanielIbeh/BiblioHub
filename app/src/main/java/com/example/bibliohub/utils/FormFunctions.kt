@@ -5,6 +5,31 @@ import com.google.android.material.textfield.TextInputLayout
 
 class FormFunctions {
     companion object {
+
+        fun validateLoginEmail(value: String, layout: TextInputLayout): Boolean {
+            var isValid = false
+            if (value.isEmpty()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
+        fun validateLoginPassword(value: String, layout: TextInputLayout): Boolean {
+            var isValid = false
+            if (value.isBlank()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
         fun validateName(value: String, layout: TextInputLayout): Boolean {
             var isValid = false
             if (value.isEmpty()) {
@@ -74,7 +99,74 @@ class FormFunctions {
             return isValid
         }
 
-        private fun TextInputLayout.setFieldError(isError: Boolean, errorText: String? = null) {
+        fun validatePostcode(value: String, layout: TextInputLayout): Boolean {
+            val pattern = "^[A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}\$"
+            var isValid = false
+            if (value.isBlank()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else if (!Regex(pattern).matches(value)) {
+                val errorText = "Invalid postcode. Make sure all characters are uppercase."
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
+
+        fun validateExpiryDate(value: String, layout: TextInputLayout): Boolean {
+            val pattern = "^(0[1-9]|1[0-2])\\/?([0-9]{4}|[0-9]{2})\$"
+            var isValid = false
+            if (value.isBlank()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else if (!Regex(pattern).matches(value)) {
+                val errorText = "Invalid Expiry Date"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
+
+        fun validateCVV(value: String, layout: TextInputLayout): Boolean {
+            val pattern = "^([0-9]{3})\$"
+            var isValid = false
+            if (value.isBlank()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else if (!Regex(pattern).matches(value)) {
+                val errorText = "Invalid CVV"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
+
+        fun validatePIN(value: String, layout: TextInputLayout): Boolean {
+            var isValid = false
+            if (value.isBlank()) {
+                val errorText = "This field is required"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else if (value.length != 4 || value.toIntOrNull() == null) {
+                val errorText = "Invalid PIN"
+                layout.setFieldError(isError = true, errorText = errorText)
+            } else {
+                layout.setFieldError(isError = false)
+                isValid = true
+            }
+            layout.isErrorEnabled = !isValid
+            return isValid
+        }
+
+        fun TextInputLayout.setFieldError(isError: Boolean, errorText: String? = null) {
             error = if (isError) errorText else null
         }
     }

@@ -12,25 +12,20 @@
             name="viewModel"
             type="com.example.bibliohub.fragments.home.HomeViewModel" />
 
-    </data>
+        <variable
+            name="shouldCancelShow"
+            type="Boolean" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constrainedHeight="true"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
+            android:layout_marginEnd="16dp">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textView113"
+                android:id="@+id/instruction"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text=""
@@ -38,23 +33,78 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textView114"
-                android:layout_width="0dp"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view_filter_type"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="5dp"
-                android:text=""
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/grey"
+                android:padding="5dp"
+                android:paddingHorizontal="5dp"
+                app:cardCornerRadius="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView113" />
+                app:layout_constraintTop_toBottomOf="@+id/instruction">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="5dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/acv_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@android:color/transparent"
+                        android:dropDownWidth="120dp"
+                        android:inputType="none"
+                        android:padding="0dp"
+                        android:hint="@string/all"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_filter_drop_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/arrow_dropdown"
+                        android:visibility="@{shouldCancelShow? View.GONE:View.VISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@id/acv_filter"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/greyBackground"
+                        android:contentDescription="@string/dropdown_icon" />
+
+                    <ImageView
+                        android:id="@+id/iv_filter_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/cancel"
+                        android:visibility="@{shouldCancelShow? View.VISIBLE:View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@id/acv_filter"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/greyBackground"
+                        android:contentDescription="@string/cancel_icon" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Search"
+                android:hint="@string/search"
                 android:inputType="textAutoComplete"
                 android:padding="10dp"
                 android:textColorHint="#75748F"
@@ -62,7 +112,7 @@
                 app:layout_constraintHeight_percent="0.07"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView114" />
+                app:layout_constraintTop_toBottomOf="@+id/card_view_filter_type" />
 
             <ImageButton
                 android:id="@+id/imageButtonStopSearch"
@@ -98,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="2"
+                android:text="@string/y_results"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +167,4 @@
                 app:strokeColor="#6675748F" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

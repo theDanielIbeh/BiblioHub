@@ -15,8 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentLoginBinding
-import com.example.bibliohub.utils.FormFunctions.Companion.validateEmail
-import com.example.bibliohub.utils.FormFunctions.Companion.validatePassword
+import com.example.bibliohub.utils.FormFunctions.Companion.validateLoginEmail
+import com.example.bibliohub.utils.FormFunctions.Companion.validateLoginPassword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,10 +42,10 @@ class LoginFragment : Fragment() {
 
         with(binding) {
             usernameEditText.doAfterTextChanged {
-                validateEmail(it.toString(), binding.usernameLayout)
+                validateLoginEmail(it.toString(), binding.usernameLayout)
             }
             passwordEditText.doAfterTextChanged {
-                validatePassword(it.toString(), binding.passwordLayout)
+                validateLoginPassword(it.toString(), binding.passwordLayout)
             }
             passwordEditText.setOnEditorActionListener { _, actionId, event ->
                 if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
@@ -87,18 +87,27 @@ class LoginFragment : Fragment() {
         password: String
     ) {
         lifecycleScope.launch {
-            val user =
-                withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
-            if (user != null) {
-                if (user.password == password) {
-                    viewModel.resetLoginModel()
-                    viewModel.savePreferences(user)
-                    findNavController().navigate(R.id.homeFragment)
-                } else {
-                    binding.passwordLayout.error = "Incorrect password"
-                }
+            if (email.equals(other = "admin", ignoreCase = true) && password.equals(
+                    other = "admin",
+                    ignoreCase = true
+                )
+            ) {
+                viewModel.saveAdminPreferences()
+                findNavController().navigate(R.id.adminHomeFragment)
             } else {
-                binding.usernameLayout.error = "This email is not registered"
+                val user =
+                    withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
+                if (user != null) {
+                    if (user.password == password) {
+                        viewModel.resetLoginModel()
+                        viewModel.savePreferences(user)
+                        findNavController().navigate(R.id.homeFragment)
+                    } else {
+                        binding.passwordLayout.error = "Incorrect password"
+                    }
+                } else {
+                    binding.usernameLayout.error = "This email is not registered"
+                }
             }
         }
     }
@@ -108,8 +117,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun validateFields(email: String, password: String): Boolean {
-        val isEmailValid = validateEmail(email, binding.usernameLayout)
-        val isPasswordValid = validatePassword(password, binding.passwordLayout)
+        val isEmailValid = validateLoginEmail(email, binding.usernameLayout)
+        val isPasswordValid = validateLoginPassword(password, binding.passwordLayout)
 
         return isEmailValid && isPasswordValid
     }

@@ -18,5 +18,11 @@ data class Order(
     var status: Constants.Status,
 
     @ColumnInfo(name = "date")
-    var date: String
+    var date: String,
+
+    @ColumnInfo(name = "address")
+    var address: String? = null,
+
+    @ColumnInfo(name = "postcode")
+    var postcode: String? = null
 )

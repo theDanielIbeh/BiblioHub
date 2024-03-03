@@ -49,14 +49,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/cardview_default_elevation"
-                android:text="@string/register_desc"
+                android:text="@string/checkout_desc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_register_title" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/first_name_layout"
+                android:id="@+id/address_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -70,17 +70,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_register_description">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/first_name_edit_text"
+                    android:id="@+id/address_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/first_name"
+                    android:hint="@string/address"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:text="@={viewModel.registerModel.firstName}" />
+                    android:text="@={viewModel.checkoutModel.address}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/last_name_layout"
+                android:id="@+id/postcode_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -91,20 +91,20 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/first_name_layout">
+                app:layout_constraintTop_toBottomOf="@+id/address_layout">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/last_name_edit_text"
+                    android:id="@+id/postcode_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/last_name"
+                    android:hint="@string/postcode"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:text="@={viewModel.registerModel.lastName}" />
+                    android:text="@={viewModel.checkoutModel.postcode}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/email_layout"
+                android:id="@+id/card_number_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,20 +115,20 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/last_name_layout">
+                app:layout_constraintTop_toBottomOf="@+id/postcode_layout">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/email_edit_text"
+                    android:id="@+id/card_number_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
+                    android:hint="@string/card_number"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:text="@={viewModel.registerModel.email}" />
+                    android:inputType="number"
+                    android:text="@={viewModel.checkoutModel.cardNumber}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_layout"
+                android:id="@+id/expiry_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -139,21 +139,20 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_layout"
-                app:passwordToggleEnabled="true">
+                app:layout_constraintTop_toBottomOf="@+id/card_number_layout">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/password_edit_text"
+                    android:id="@+id/expiry_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
+                    android:hint="@string/expiry_date"
                     android:imeOptions="actionNext"
-                    android:inputType="textPassword"
-                    android:text="@={viewModel.registerModel.password}" />
+                    android:inputType="text"
+                    android:text="@={viewModel.checkoutModel.expiry}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/confirm_password_layout"
+                android:id="@+id/cvv_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -164,19 +163,41 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_layout"
-                app:passwordToggleEnabled="true">
+                app:layout_constraintTop_toBottomOf="@+id/expiry_layout">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/confirm_password_edit_text"
+                    android:id="@+id/cvv_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/confirm_password"
+                    android:hint="@string/cvv"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:text="@={viewModel.checkoutModel.cvv}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pin_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cvv_layout">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/pin_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pin"
                     android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:text="@={viewModel.registerModel.confirmPassword}" />
+                    android:inputType="number"
+                    android:text="@={viewModel.checkoutModel.pin}" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_register"
@@ -185,41 +206,9 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/register"
                 app:cornerRadius="10dp"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/confirm_password_layout">
-
-                <TextView
-                    android:id="@+id/existing_user_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/existing_user_message"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/existing_user_action"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/cardview_default_elevation"
-                    android:gravity="center"
-                    android:text="@string/login"
-                    android:textColor="#0070E0"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

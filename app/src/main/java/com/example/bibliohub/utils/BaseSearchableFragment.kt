@@ -26,10 +26,10 @@ abstract class BaseSearchableFragment<T> : Fragment() {
     open val searchCallback: ((String) -> Unit)? = null
 
     // Provide binding's search button/image
-    abstract val searchButton: ImageButton?
+    open val searchButton: ImageButton? = null
 
     // Provide binding's search edit text
-    abstract val searchText: TextInputEditText?
+    open val searchText: TextInputEditText? = null
 
     open var shouldClickToSearch = false
 
@@ -75,6 +75,12 @@ abstract class BaseSearchableFragment<T> : Fragment() {
      * Override and return binding.root
      */
     abstract fun returnBindingRoot(): View
+
+    /**
+     * Override and provide the number of Tgs in the tg list
+     * call after setting the list in the adapter
+     */
+    open fun setSearchResult(listSize: Int) {}
 
     /**
      * Override and set any onClickListeners

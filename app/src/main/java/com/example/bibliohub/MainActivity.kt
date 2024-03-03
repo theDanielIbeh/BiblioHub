@@ -9,13 +9,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.view.MenuProvider
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
+import com.example.bibliohub.utils.Constants.Companion.IS_ADMIN
 import com.example.bibliohub.utils.Constants.Companion.IS_LOGGED_IN
 import kotlinx.coroutines.launch
 
@@ -34,10 +33,18 @@ class MainActivity : AppCompatActivity() {
             Boolean::class.java,
             IS_LOGGED_IN
         )
+        val isAdmin = viewModel.biblioHubPreferencesRepository.getPreference(
+            Boolean::class.java,
+            IS_ADMIN
+        )
         lifecycleScope.launch {
             isLoggedIn.collect {
                 if (it == true) {
-                    navGraph.setStartDestination(startDestId = R.id.homeFragment)
+                    if (isAdmin.equals(true)) {
+                        navGraph.setStartDestination(startDestId = R.id.adminHomeFragment)
+                    } else {
+                        navGraph.setStartDestination(startDestId = R.id.homeFragment)
+                    }
                 } else {
                     navGraph.setStartDestination(startDestId = R.id.loginFragment)
                 }
@@ -45,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 navController.setGraph(navGraph, intent.extras)
             }
         }
-        setMenu()
+//        setMenu()
     }
 
     private fun setMenu() {
@@ -66,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPrepareMenu(menu: Menu) {
                 super.onPrepareMenu(menu)
                 val menuItems = arrayListOf(R.id.home_item, R.id.cart_item)
-                menuItems.forEach {id->
+                menuItems.forEach { id ->
                     val item = menu.findItem(id)
                     item.icon?.setTint(resources.getColor(R.color.lightGrey))
                 }
@@ -82,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 return when (menuItem.itemId) {
                     R.id.home_item -> {
-                        navController.navigate(R.id.homeFragment)
+                        navController.popBackStack(R.id.homeFragment, true)
                         true
                     }
 

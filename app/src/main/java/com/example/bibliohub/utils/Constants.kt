@@ -5,6 +5,7 @@ class Constants private constructor() {
         const val APP_IDENTIFIER = "BiblioHub"
         const val USER = "user"
         const val IS_LOGGED_IN = "is_logged_in"
+        const val IS_ADMIN = "is_admin"
     }
 
     enum class Status {

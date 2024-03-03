@@ -14,16 +14,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentCheckoutBinding
-import com.example.bibliohub.databinding.FragmentRegisterBinding
 import com.example.bibliohub.utils.FormFunctions
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CheckoutFragment : Fragment() {
 
     private val viewModel: CheckoutViewModel by viewModels { CheckoutViewModel.Factory }
     private lateinit var binding: FragmentCheckoutBinding
+    private var alertModalFragment = AlertModalFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,28 +34,25 @@ class CheckoutFragment : Fragment() {
         binding.viewModel = viewModel
 
         with(binding) {
-            firstNameEditText.doAfterTextChanged {
-                FormFunctions.validateName(it.toString(), binding.firstNameLayout)
+            addressEditText.doAfterTextChanged {
+                FormFunctions.validateName(it.toString(), binding.addressLayout)
             }
-            lastNameEditText.doAfterTextChanged {
-                FormFunctions.validateName(it.toString(), binding.lastNameLayout)
+            postcodeEditText.doAfterTextChanged {
+                FormFunctions.validatePostcode(it.toString(), binding.postcodeLayout)
             }
-            emailEditText.doAfterTextChanged {
-                FormFunctions.validateEmail(it.toString(), binding.emailLayout)
+            cardNumberEditText.doAfterTextChanged {
+                FormFunctions.validateEmail(it.toString(), binding.cardNumberLayout)
             }
-            passwordEditText.doAfterTextChanged {
-                FormFunctions.validatePassword(it.toString(), binding.passwordLayout)
+            expiryEditText.doAfterTextChanged {
+                FormFunctions.validateExpiryDate(it.toString(), binding.expiryLayout)
             }
-            confirmPasswordEditText.doAfterTextChanged {
-                viewModel?.registerModel?.value?.password?.let { password ->
-                    FormFunctions.validateConfirmPassword(
-                        it.toString(),
-                        password,
-                        binding.confirmPasswordLayout
-                    )
-                }
+            cvvEditText.doAfterTextChanged {
+                FormFunctions.validateCVV(it.toString(), binding.cvvLayout)
             }
-            confirmPasswordEditText.setOnEditorActionListener { _, actionId, event ->
+            pinEditText.doAfterTextChanged {
+                FormFunctions.validatePIN(it.toString(), binding.pinLayout)
+            }
+            pinEditText.setOnEditorActionListener { _, actionId, event ->
                 if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                     btnRegister.performClick()
                 }
@@ -65,21 +60,23 @@ class CheckoutFragment : Fragment() {
             }
             btnRegister.setOnClickListener {
                 val (
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    confirmPassword
-                ) = viewModel?.registerModel?.value ?: RegisterModel()
+                    address,
+                    postcode,
+                    cardNumber,
+                    expiry,
+                    cvv,
+                    pin
+                ) = viewModel?.checkoutModel?.value ?: CheckoutModel()
                 val isFormValid = validateFields(
-                    firstName = firstName,
-                    lastName = lastName,
-                    email = email,
-                    password = password,
-                    confirmPassword = confirmPassword
+                    address = address,
+                    postcode = postcode,
+                    cardNumber = cardNumber,
+                    expiry = expiry,
+                    cvv = cvv,
+                    pin = pin
                 )
                 if (isFormValid) {
-                    proceedToLoginScreen(email = email)
+                    completePayment()
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -87,54 +84,34 @@ class CheckoutFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-                existingUserAction.setOnClickListener {
-                    navigateToLoginScreen()
-                }
             }
         }
 
         return binding.root
     }
 
-    private fun proceedToLoginScreen(email: String) {
+    private fun completePayment() {
         lifecycleScope.launch {
-            val user = withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
-            if (user == null) {
-                viewModel.insertUser()
-                viewModel.resetRegisterModel()
-                navigateToLoginScreen()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "User already exists!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            alertModalFragment.show(requireActivity().supportFragmentManager, "AlertModalFragment")
         }
     }
 
-    private fun navigateToLoginScreen() {
-        findNavController().navigate(R.id.loginFragment)
-    }
-
     private fun validateFields(
-        firstName: String,
-        lastName: String,
-        email: String,
-        password: String,
-        confirmPassword: String
+        address: String,
+        postcode: String,
+        cardNumber: String,
+        expiry: String,
+        cvv: String,
+        pin: String
     ): Boolean {
-        val isFirstNameValid = FormFunctions.validateName(firstName, binding.firstNameLayout)
-        val isLastNameValid = FormFunctions.validateName(lastName, binding.lastNameLayout)
-        val isEmailValid = FormFunctions.validateEmail(email, binding.emailLayout)
-        val isPasswordValid = FormFunctions.validatePassword(password, binding.passwordLayout)
-        val isConfirmPasswordValid = FormFunctions.validateConfirmPassword(
-            confirmPassword,
-            password,
-            binding.confirmPasswordLayout
-        )
+        val isAddressValid = FormFunctions.validateName(address, binding.addressLayout)
+        val isPostcodeValid = FormFunctions.validateName(postcode, binding.postcodeLayout)
+        val isCardNumberValid = FormFunctions.validateEmail(cardNumber, binding.cardNumberLayout)
+        val isExpiryValid = FormFunctions.validatePassword(expiry, binding.expiryLayout)
+        val isCVVValid = FormFunctions.validatePassword(cvv, binding.cvvLayout)
+        val isPINValid = FormFunctions.validatePassword(pin, binding.pinLayout)
 
-        return isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid
+
+        return isAddressValid && isPostcodeValid && isCardNumberValid && isExpiryValid && isCVVValid && isPINValid
     }
 }

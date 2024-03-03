@@ -5,5 +5,7 @@
     <color name="darkBlue">#FF001540</color>
     <color name="lightGreen">#FF4CAF50</color>
     <color name="lightGrey">#FFC7C8CC</color>
-    <color name="disabled">#EBEBE4</color>
+    <color name="disabled">#FFEBEBE4</color>
+    <color name="grey">#FF75748F</color>
+    <color name="greyBackground">#C4C4C4</color>
 </resources>

@@ -5,48 +5,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bibliohub.BiblioHubApplication
-import com.example.bibliohub.data.entities.user.User
+import com.example.bibliohub.data.entities.order.OrderRepository
 import com.example.bibliohub.data.entities.user.UserRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-data class RegisterModel(
-    var firstName: String = "",
-    var lastName: String = "",
-    var email: String = "",
-    var password: String = "",
-    var confirmPassword: String = "",
+data class CheckoutModel(
+    var address: String = "",
+    var postcode: String = "",
+    var cardNumber: String = "",
+    var expiry: String = "",
+    var cvv: String = "",
+    var pin: String = "",
 )
 
-class CheckoutViewModel(private val userRepository: UserRepository) : ViewModel() {
-    private var _registerModel: MutableStateFlow<RegisterModel> = MutableStateFlow(RegisterModel())
-    val registerModel: StateFlow<RegisterModel> = _registerModel.asStateFlow()
+class CheckoutViewModel(
+    private val userRepository: UserRepository,
+    private val orderRepository: OrderRepository
+) : ViewModel() {
+    private var _checkoutModel: MutableStateFlow<CheckoutModel> = MutableStateFlow(CheckoutModel())
+    val checkoutModel: StateFlow<CheckoutModel> = _checkoutModel.asStateFlow()
 
-    suspend fun getUserDetails(email: String): User? {
-        return userRepository.getUser(email = email)
-    }
-
-    suspend fun insertUser() {
-        val (
-            firstName,
-            lastName,
-            email,
-            password
-        ) = registerModel.value
-        userRepository.insert(
-            user = User(
-                firstName = firstName,
-                lastName = lastName,
-                email = email,
-                password = password
-            )
-        )
-    }
-
-    fun resetRegisterModel() {
-        _registerModel.value = RegisterModel()
+    fun resetCheckoutModel() {
+        _checkoutModel.value = CheckoutModel()
     }
 
     companion object {
@@ -55,7 +37,11 @@ class CheckoutViewModel(private val userRepository: UserRepository) : ViewModel(
                 val application =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
                 val userRepository = application.container.userRepository
-                CheckoutViewModel(userRepository = userRepository)
+                val orderRepository = application.container.orderRepository
+                CheckoutViewModel(
+                    userRepository = userRepository,
+                    orderRepository = orderRepository
+                )
             }
         }
     }

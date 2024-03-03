@@ -10,6 +10,7 @@ interface ProductRepository {
     suspend fun insert(product: Product)
     suspend fun getAvailableProducts(pageSize: Int, filterText: String?): Flow<PagingData<Product>>
     fun getProductsInCart(pageSize: Int, cartIds: List<Int>): Flow<PagingData<Product>>
+    suspend fun getAllProducts(pageSize: Int, filterText: String?): Flow<PagingData<Product>>
 }
 
 class OfflineProductRepository(
@@ -36,6 +37,16 @@ class OfflineProductRepository(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
             productDao.getProductsInCart(cartIds)
+        }
+    ).flow
+
+    override suspend fun getAllProducts(
+        pageSize: Int,
+        filterText: String?
+    ): Flow<PagingData<Product>> = Pager(
+        config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
+        pagingSourceFactory = {
+            productDao.getAllProducts(filterText)
         }
     ).flow
 }
