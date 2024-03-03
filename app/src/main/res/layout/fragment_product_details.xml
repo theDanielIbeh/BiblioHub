@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.productDetails.ProductDetailsFragment">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.bibliohub.fragments.productDetails.ProductDetailsViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/content_scroll_view"
@@ -47,7 +55,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/memberImageView"
-                    tools:text="Book" />
+                    android:text="@{viewModel.product.name}"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/author_text_view"
@@ -60,7 +68,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_text_view"
-                    tools:text="Book" />
+                    android:text="@{viewModel.product.author}" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/description_title_text_view"
@@ -88,7 +96,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/description_title_text_view"
-                    tools:text="Book" />
+                    android:text="@{viewModel.product.description}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -100,11 +108,11 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/delete_from_cart_button"
+            app:layout_constraintBottom_toTopOf="@+id/add_to_cart_button"
             app:layout_constraintEnd_toStartOf="@+id/subtract_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/content_scroll_view"
-            tools:text="Book" />
+            android:text="@{viewModel.product.price}" />
 
         <ImageView
             android:id="@+id/subtract_btn"
@@ -153,10 +161,10 @@
             app:layout_constraintTop_toTopOf="@+id/quantity_layout" />
 
         <Button
-            android:id="@+id/delete_from_cart_button"
+            android:id="@+id/add_to_cart_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_margin="8dp"
             android:hapticFeedbackEnabled="false"
             android:insetTop="0dp"
             android:insetBottom="0dp"
