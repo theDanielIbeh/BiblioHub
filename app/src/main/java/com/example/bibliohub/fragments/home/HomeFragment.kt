@@ -68,11 +68,14 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
             binding.recyclerView.adapter = adapter
             (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
                 false
+            viewModel.isRecyclerInitialized = true
         }
     }
 
-    override fun addOrUpdateCart(product: Product, quantity: Int) {
-        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity)
+    override fun addOrUpdateCart(product: Product, quantity: Int,itemPosition:Int) {
+        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity){
+            adapter.notifyItemChanged(itemPosition)
+        }
     }
 
     private fun refresh() {

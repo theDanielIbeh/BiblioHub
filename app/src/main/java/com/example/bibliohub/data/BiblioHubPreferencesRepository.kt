@@ -27,7 +27,7 @@ class BiblioHubPreferencesRepository(
         private const val FAIL = -1
     }
 
-    suspend fun <T> savePreference(key: String, value: T): Int {
+    suspend fun <T> savePreference(key: String, value: T): Boolean {
         when (value) {
             is String -> {
                 datastore.edit { preferences ->
@@ -77,12 +77,12 @@ class BiblioHubPreferencesRepository(
                             preferences[preferenceKey] = value.toString()
                         }
                     } catch (e: Exception) {
-                        return FAIL
+                        return true
                     }
                 }
             }
         }
-        return SUCCESS
+        return false
     }
 
 

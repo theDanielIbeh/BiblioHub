@@ -53,20 +53,18 @@ class CartFragment : BaseSearchableFragment<Product>(), CartPagingDataAdapter.Ca
     override fun initRecycler() {
         viewModel.initOrderDetails {
             adapter = CartPagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
-            lifecycleScope.launch {
-                var idList = mutableListOf<Int>()
-                viewModel.userOrderDetails.forEach { it -> idList.add(it.productId) }
-                viewModel.products(idList).collectLatest { pagingData ->
-                    // submitData suspends until loading this generation of data stops
-                    // so be sure to use collectLatest {} when presenting a Flow<PagingData>
-                    adapter.submitData(lifecycle, pagingData)
-                }
-            }
             binding.recyclerView.layoutManager = LinearLayoutManager(context)
             binding.recyclerView.itemAnimator = DefaultItemAnimator()
             binding.recyclerView.adapter = adapter
             (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
                 false
+            viewModel.isRecyclerInitialized = true
+
+            viewModel.getProductsByIds(
+                viewModel.userOrderDetails.map { it.productId }
+            ).collectLatest { productPagingData ->
+                    adapter.submitData(lifecycle, productPagingData)
+            }
         }
     }
 

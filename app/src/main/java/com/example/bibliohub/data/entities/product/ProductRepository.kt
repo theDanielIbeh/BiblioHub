@@ -1,6 +1,5 @@
 package com.example.bibliohub.data.entities.product
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductRepository {
     suspend fun insert(product: Product)
     suspend fun getAvailableProducts(pageSize: Int, filterText: String?): Flow<PagingData<Product>>
-    fun getProductsInCart(pageSize: Int, cartIds: List<Int>): Flow<PagingData<Product>>
+    fun getProductsByIDs(pageSize: Int, productIDs: List<Int>): Flow<PagingData<Product>>
 }
 
 class OfflineProductRepository(
@@ -29,13 +28,13 @@ class OfflineProductRepository(
         }
     ).flow
 
-    override fun getProductsInCart(
+    override fun getProductsByIDs(
         pageSize: Int,
-        cartIds: List<Int>
+        productIDs: List<Int>
     ): Flow<PagingData<Product>> = Pager(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
-            productDao.getProductsInCart(cartIds)
+            productDao.getProductsByIDs(productIDs)
         }
     ).flow
 }

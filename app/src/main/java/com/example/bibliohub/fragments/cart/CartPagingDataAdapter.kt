@@ -100,6 +100,7 @@ class CartPagingDataAdapter(
 
                 binding.deleteFromCartButton.setOnClickListener {
                     listener.deleteFromCart(product.id)
+                    notifyItemChanged(position)
                 }
 
             } catch (e: Exception) {

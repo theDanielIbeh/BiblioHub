@@ -28,7 +28,7 @@ object ProductComparator : DiffUtil.ItemCallback<Product>() {
 class HomePagingDataAdapter(
     private val context: Context,
     private val listener: HomeListener,
-    private val itemsInCart: List<OrderDetails>,
+    private val itemsInCart: MutableList<OrderDetails>,
 ) :
     PagingDataAdapter<Product, HomePagingDataAdapter.HomeViewHolder>(ProductComparator) {
     /**
@@ -141,9 +141,9 @@ class HomePagingDataAdapter(
                 binding.addToCartButton.setOnClickListener {
                     listener.addOrUpdateCart(
                         product,
-                        orderQuantity
+                        orderQuantity,
+                        position
                     )
-                    notifyItemChanged(position)
                 }
 
 
@@ -154,6 +154,6 @@ class HomePagingDataAdapter(
     }
 
     interface HomeListener {
-        fun addOrUpdateCart(product: Product, quantity: Int)
+        fun addOrUpdateCart(product: Product, quantity: Int,itemPosition:Int)
     }
 }

@@ -14,6 +14,6 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE quantity > 0 AND name LIKE :filterText")
     fun getAvailableProducts(filterText: String?): PagingSource<Int, Product>
 
-    @Query("SELECT * FROM product WHERE quantity > 0 AND id IN (:cartIds)")
-    fun getProductsInCart(cartIds: List<Int>): PagingSource<Int, Product>
+    @Query("SELECT * FROM product WHERE quantity > 0 AND id IN (:productIDs)")
+    fun getProductsByIDs(productIDs: List<Int>): PagingSource<Int, Product>
 }
