@@ -68,8 +68,10 @@ class HomePagingDataAdapter(
                     return
                 }
 
-                Glide.with(context).load(product.imgSrc)
-                    .into(binding.memberImageView)
+                product.imgSrc?.let {
+                    Glide.with(context).load(it)
+                        .into(binding.memberImageView)
+                }
 
                 //to be used to track order info
                 val userItemInCart = itemsInCart.firstOrNull { it.productId == product.id }
@@ -131,7 +133,7 @@ class HomePagingDataAdapter(
                 }
                 binding.addToCartButton.text = cartButtonText
                 binding.addToCartButton.setBackgroundColor(cartButtonColor)
-                binding.nameTextView.text = product.name
+                binding.nameTextView.text = product.title
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price
                 //make sure order quantity view has item to display
@@ -141,9 +143,9 @@ class HomePagingDataAdapter(
                 binding.addToCartButton.setOnClickListener {
                     listener.addOrUpdateCart(
                         product,
-                        orderQuantity
+                        orderQuantity,
+                        position
                     )
-                    notifyItemChanged(position)
                 }
 
                 binding.memberImageView.setOnClickListener {
@@ -158,7 +160,7 @@ class HomePagingDataAdapter(
     }
 
     interface HomeListener {
-        fun addOrUpdateCart(product: Product, quantity: Int)
+        fun addOrUpdateCart(product: Product, quantity: Int,itemPosition:Int)
         fun viewProduct(product: Product)
     }
 }

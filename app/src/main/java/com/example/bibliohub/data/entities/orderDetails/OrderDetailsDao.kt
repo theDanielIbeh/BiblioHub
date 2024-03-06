@@ -16,6 +16,8 @@ interface OrderDetailsDao {
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
     fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>>
+    @Query("SELECT * FROM order_details WHERE order_id = :orderId")
+    fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails>
 
     @Query("DELETE FROM order_details WHERE order_id = :orderId AND " +
             "product_id = :productId")

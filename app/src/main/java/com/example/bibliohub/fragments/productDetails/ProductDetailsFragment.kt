@@ -29,8 +29,10 @@ class ProductDetailsFragment : Fragment() {
         binding.lifecycleOwner = this
         viewModel.product = args.product
 
-        Glide.with(requireContext()).load(viewModel.product.imgSrc)
-            .into(binding.memberImageView)
+        viewModel.product.imgSrc?.let {
+            Glide.with(requireContext()).load(it)
+                .into(binding.memberImageView)
+        }
 
         initializeOrderDetails()
         return binding.root

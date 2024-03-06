@@ -12,32 +12,32 @@ data class Product(
     @ColumnInfo(name = "id")
     val id: Int = 0,
 
-    @ColumnInfo(name = "name")
-    var name: String,
+    @ColumnInfo(name = "title")
+    var title: String,
 
     @ColumnInfo(name = "author")
-    var author: String,
+    var author: String?,
 
     @ColumnInfo(name = "description")
-    var description: String,
+    var description: String?,
 
     @ColumnInfo(name = "isbn")
-    var isbn: String,
+    var isbn: String?,
 
     @ColumnInfo(name = "quantity")
     var quantity: Int,
 
     @ColumnInfo(name = "img_src")
-    var imgSrc: String,
+    var imgSrc: String?,
 
     @ColumnInfo(name = "pub_date")
-    var pubDate: String,
+    var pubDate: String?,
 
     @ColumnInfo(name = "price")
     var price: String,
 
     @ColumnInfo(name = "category")
-    var category: String
+    var category: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -55,7 +55,7 @@ data class Product(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
-        parcel.writeString(name)
+        parcel.writeString(title)
         parcel.writeString(author)
         parcel.writeString(description)
         parcel.writeString(isbn)

@@ -41,4 +41,23 @@
     <string name="search">Search</string>
     <string name="cancel_icon">Cancel Icon</string>
     <string name="dropdown_icon">Dropdown Icon</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="price_colon">Price (£):</string>
+    <string name="available_quantity_colon">Available Quantity:</string>
+    <string name="isbn_colon">ISBN:</string>
+    <string name="publication_date_colon">Publication Date:</string>
+    <string name="category_colon">Category:</string>
+    <string name="checkout_title">Pay Now!</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="isbn">ISBN</string>
+    <string name="quantity">Quantity</string>
+    <string name="category">Category</string>
+    <string name="price">Price (£)</string>
+    <string name="publication_date">Publication Date</string>
+    <string name="click_to_add_image">Click to add image</string>
+    <string name="checkout">Checkout</string>
+    <string name="orders">Orders</string>
+    <string name="submit">Submit</string>
 </resources>

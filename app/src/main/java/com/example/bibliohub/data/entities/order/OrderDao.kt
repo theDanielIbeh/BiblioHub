@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.bibliohub.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,5 +18,6 @@ interface OrderDao {
     @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
     suspend fun getStaticActiveOrderByUserId(userId: Int): Order?
 
-
+    @Query("UPDATE `order` SET status = :status WHERE id = :orderId")
+    suspend fun updateOrderStatus(orderId: Int, status: Constants.Status)
 }

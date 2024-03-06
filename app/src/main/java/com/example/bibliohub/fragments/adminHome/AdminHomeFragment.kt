@@ -1,10 +1,14 @@
 package com.example.bibliohub.fragments.adminHome
 
+import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +48,23 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingData
 
         searchButton = binding.imageButtonStopSearch
         searchText = binding.etSearch
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val adminHome = activity?.findViewById<ActionMenuItemView>(R.id.admin_home_item)
+        val order = activity?.findViewById<ActionMenuItemView>(R.id.order_item)
+        adminHome?.setBackgroundColor(resources.getColor(R.color.darkBlue))
+        order?.setBackgroundColor(resources.getColor(R.color.disabled))
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu){
+        super.onPrepareOptionsMenu(menu)
+        menu.getItem(R.id.admin_home_item).isVisible = true
+        menu.getItem(R.id.order_item).isVisible = true
+        menu.getItem(R.id.home_item).isVisible = false
+        menu.getItem(R.id.cart_item).isVisible = false
     }
 
     override fun initCompulsoryVariables() {

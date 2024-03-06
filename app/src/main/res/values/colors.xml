@@ -7,5 +7,6 @@
     <color name="lightGrey">#FFC7C8CC</color>
     <color name="disabled">#FFEBEBE4</color>
     <color name="grey">#FF75748F</color>
-    <color name="greyBackground">#C4C4C4</color>
+    <color name="greyBackground">#FFC4C4C4</color>
+    <color name="red">#FF0000</color>
 </resources>

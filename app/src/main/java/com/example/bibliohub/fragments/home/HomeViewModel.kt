@@ -1,5 +1,6 @@
 package com.example.bibliohub.fragments.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,16 +18,14 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
-import okhttp3.internal.notifyAll
+import kotlinx.coroutines.withContext
 
 class HomeViewModel(
     private val orderRepository: OrderRepository,
@@ -36,12 +35,13 @@ class HomeViewModel(
 ) : ViewModel() {
     private lateinit var activeOrder: Flow<Order?>
     private var loggedInUser: Flow<User?>
+
     //Variables to hold order information
     private lateinit var currentOrder: Order
-    internal lateinit var userOrderDetails: List<OrderDetails>
+    internal val userOrderDetails = mutableListOf<OrderDetails>()
     internal var selectedCategory: String? = ""
 
-//    var cart: MutableStateFlow<List<OrderDetails>?> = MutableStateFlow(listOf())
+    //    var cart: MutableStateFlow<List<OrderDetails>?> = MutableStateFlow(listOf())
 //    var orderDetailsInOrder: Flow<List<OrderDetails>?> = flowOf(listOf())
     private var filterText: MutableStateFlow<String> = MutableStateFlow("%%")
     var mFilterText: String? = "%%"
@@ -85,18 +85,48 @@ class HomeViewModel(
 
                 //check if user already has an order saved and assign to order details list
                 orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
-                    //clear list in the event list is holding other objects
-                    userOrderDetails = it
-                    //run callback after order details initialized
-                    onOrderDetailsInitialized()
+                    Log.d("Order", it.toString())
+                    updateOrderDetailsList(it) {
+                        //run callback after order details initialized with check if recycler has
+                        // already ben initialized
+                            onOrderDetailsInitialized()
+                    }
+
                 }
             }
         }
     }
 
 
-    fun createOrUpdateOrderDetails(product: Product, quantity: Int) {
-        viewModelScope.launch{//check if order exist in order details list
+    private fun updateOrderDetailsList(
+        orderDetails: List<OrderDetails>,
+        onOrderDetailsUpdated: () -> Unit
+    ) {
+        userOrderDetails.clear()
+        userOrderDetails.addAll(orderDetails)
+        onOrderDetailsUpdated()
+    }
+
+
+    fun createOrUpdateOrderDetails(
+        product: Product,
+        quantity: Int,
+        onCartUpdated: () -> Unit
+    ) {
+        suspend fun updateOrderDetailsAndRecycler() {
+            val orderDetails =
+                withContext(Dispatchers.IO) {
+                    orderDetailsRepository.getStaticOrderDetailsByOrderId(
+                        currentOrder.id
+                    )
+                }
+            withContext(Dispatchers.Main) {
+                updateOrderDetailsList(orderDetails) {
+                    onCartUpdated()
+                }
+            }
+        }
+        viewModelScope.launch {//check if order exist in order details list
             val existingOrderDetail =
                 userOrderDetails.firstOrNull {
                     it.orderId == currentOrder.id && it.productId == product.id
@@ -112,19 +142,22 @@ class HomeViewModel(
                         price = product.price
                     )
                 )
+                updateOrderDetailsAndRecycler()
                 return@launch
             }
             //Update order detail if exist
-            if (quantity==0){
+            if (quantity == 0) {
                 //delete order information if user updates quantity to zero
                 orderDetailsRepository.deleteOrderDetails(
                     orderId = existingOrderDetail.orderId,
                     productId = existingOrderDetail.productId
                 )
+                updateOrderDetailsAndRecycler()
                 return@launch
             }
             //update order quantity when user updates order
             orderDetailsRepository.insertOrUpdate(existingOrderDetail.copy(quantity = quantity))
+            updateOrderDetailsAndRecycler()
         }
     }
 
@@ -181,7 +214,7 @@ class HomeViewModel(
         val products = arrayListOf(
             Product(
                 id = 1,
-                name = "First",
+                title = "First",
                 author = "author",
                 description = "",
                 isbn = "",
@@ -192,7 +225,7 @@ class HomeViewModel(
                 category = "Fiction"
             ), Product(
                 id = 2,
-                name = "Second",
+                title = "Second",
                 author = "author",
                 description = "",
                 isbn = "",

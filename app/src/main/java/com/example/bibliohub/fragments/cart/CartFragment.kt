@@ -1,9 +1,11 @@
 package com.example.bibliohub.fragments.cart
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -16,53 +18,40 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class CartFragment : BaseSearchableFragment<Product>(), CartPagingDataAdapter.CartListener {
-
-    companion object {
-        private val TAG = CartFragment::getTag
-    }
+class CartFragment : Fragment(), CartPagingDataAdapter.CartListener {
 
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
     private lateinit var binding: FragmentCartBinding
     private lateinit var adapter: CartPagingDataAdapter
-    override var viewModelFilterText: String? = null
-    override var searchCallback: ((String) -> Unit)? = null
-    override var searchButton: ImageButton? = null
-    override var searchText: TextInputEditText? = null
 
-    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         binding = FragmentCartBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
-    }
 
-    override fun initCompulsoryVariables() {
-    }
+        initRecycler()
 
-    override fun returnBindingRoot(): View {
         return binding.root
     }
 
-    override fun setBinding() {
-    }
-
-    override fun initRecycler() {
+    private fun initRecycler() {
         viewModel.initOrderDetails {
             adapter = CartPagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
-            lifecycleScope.launch {
-                val idList = mutableListOf<Int>()
-                viewModel.userOrderDetails.forEach { idList.add(it.productId) }
-                viewModel.products(idList).collectLatest { pagingData ->
-                    // submitData suspends until loading this generation of data stops
-                    // so be sure to use collectLatest {} when presenting a Flow<PagingData>
-                    adapter.submitData(lifecycle, pagingData)
-                }
-            }
             binding.recyclerView.layoutManager = LinearLayoutManager(context)
             binding.recyclerView.itemAnimator = DefaultItemAnimator()
             binding.recyclerView.adapter = adapter
             (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
                 false
+
+            viewModel.getProductsByIds(
+                viewModel.userOrderDetails.map { it.productId }
+            ).collectLatest { productPagingData ->
+                    adapter.submitData(lifecycle, productPagingData)
+            }
         }
     }
 

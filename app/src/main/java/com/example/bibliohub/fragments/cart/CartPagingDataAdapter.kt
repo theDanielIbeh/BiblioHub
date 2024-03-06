@@ -66,8 +66,10 @@ class CartPagingDataAdapter(
                 if (product == null) {
                     return
                 }
-                Glide.with(context).load(product.imgSrc)
-                    .into(binding.memberImageView)
+                product.imgSrc?.let {
+                    Glide.with(context).load(it)
+                        .into(binding.memberImageView)
+                }
 
                 //to be used to track order info
                 val userItemInCart = itemsInCart.firstOrNull { it.productId == product.id }
@@ -91,7 +93,7 @@ class CartPagingDataAdapter(
                     }
                     updateOrderQtyView(currentDisplayedQty - 1)
                 }
-                binding.nameTextView.text = product.name
+                binding.nameTextView.text = product.title
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price
                 //make sure order quantity view has item to display
@@ -100,8 +102,8 @@ class CartPagingDataAdapter(
 
                 binding.deleteFromCartButton.setOnClickListener {
                     listener.deleteFromCart(product.id)
+                    notifyItemChanged(position)
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }

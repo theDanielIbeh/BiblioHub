@@ -3,6 +3,7 @@ package com.example.bibliohub.fragments.home
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -60,6 +61,13 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
         cart?.setBackgroundColor(resources.getColor(R.color.disabled))
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu){
+        super.onPrepareOptionsMenu(menu)
+        menu.getItem(R.id.admin_home_item).isVisible = false
+        menu.getItem(R.id.order_item).isVisible = false
+        menu.getItem(R.id.home_item).isVisible = true
+        menu.getItem(R.id.cart_item).isVisible = true
+    }
     override fun initCompulsoryVariables() {
         viewModelFilterText = viewModel.mFilterText
         searchCallback = { it -> viewModel.search(it) }
@@ -117,8 +125,10 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
         binding.noOfResultsTextview.text = getString(R.string.y_results, size)
     }
 
-    override fun addOrUpdateCart(product: Product, quantity: Int) {
-        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity)
+    override fun addOrUpdateCart(product: Product, quantity: Int,itemPosition:Int) {
+        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity){
+            adapter.notifyItemChanged(itemPosition)
+        }
     }
 
     override fun viewProduct(product: Product) {

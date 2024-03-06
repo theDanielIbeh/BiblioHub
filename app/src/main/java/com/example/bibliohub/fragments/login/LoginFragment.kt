@@ -15,8 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentLoginBinding
-import com.example.bibliohub.utils.FormFunctions.Companion.validateLoginEmail
-import com.example.bibliohub.utils.FormFunctions.Companion.validateLoginPassword
+import com.example.bibliohub.utils.FormFunctions.validateLoginEmail
+import com.example.bibliohub.utils.FormFunctions.validateLoginPassword
+import com.example.bibliohub.utils.HelperFunctions.setAdminMenu
+import com.example.bibliohub.utils.HelperFunctions.setMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,6 +95,7 @@ class LoginFragment : Fragment() {
                 )
             ) {
                 viewModel.saveAdminPreferences()
+                setAdminMenu(requireActivity(), viewModel)
                 findNavController().navigate(R.id.adminHomeFragment)
             } else {
                 val user =
@@ -101,6 +104,7 @@ class LoginFragment : Fragment() {
                     if (user.password == password) {
                         viewModel.resetLoginModel()
                         viewModel.savePreferences(user)
+                        setMenu(requireActivity(), viewModel)
                         findNavController().navigate(R.id.homeFragment)
                     } else {
                         binding.passwordLayout.error = "Incorrect password"

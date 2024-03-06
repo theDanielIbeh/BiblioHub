@@ -1,23 +1,15 @@
 package com.example.bibliohub
 
-import android.annotation.SuppressLint
-import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
-import com.example.bibliohub.utils.Constants.Companion.IS_ADMIN
-import com.example.bibliohub.utils.Constants.Companion.IS_LOGGED_IN
+import com.example.bibliohub.utils.Constants.IS_ADMIN
+import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
+import com.example.bibliohub.utils.HelperFunctions.setAdminMenu
+import com.example.bibliohub.utils.HelperFunctions.setMenu
 import kotlinx.coroutines.launch
 
 
@@ -47,8 +39,10 @@ class MainActivity : AppCompatActivity() {
             isLoggedIn.collect {
                 if (it == true) {
                     if (isAdmin.equals(true)) {
+                        setAdminMenu(this@MainActivity, viewModel)
                         navGraph.setStartDestination(startDestId = R.id.adminHomeFragment)
                     } else {
+                        setMenu(this@MainActivity, viewModel)
                         navGraph.setStartDestination(startDestId = R.id.homeFragment)
                     }
                 } else {
@@ -57,69 +51,6 @@ class MainActivity : AppCompatActivity() {
                 val navController = navHostFragment.navController
                 navController.setGraph(navGraph, intent.extras)
             }
-        }
-        setMenu()
-    }
-
-    private fun setMenu() {
-        // Add menu items without using the Fragment Menu APIs
-        // Note how we can tie the MenuProvider to the viewLifecycleOwner
-        // and an optional Lifecycle.State (here, RESUMED) to indicate when
-        // the menu should be visible
-        val navController =
-            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-        addMenuProvider(object : MenuProvider {
-            @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.main_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                resetMenuItemColors(menuItem.itemId)
-                Log.d("MainActivity", menuItem.itemId.toString())
-                return when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    R.id.home_item -> {
-                        navController.popBackStack(R.id.homeFragment, false)
-                        true
-                    }
-
-                    R.id.log_out -> {
-                        lifecycleScope.launch {
-                            viewModel.biblioHubPreferencesRepository.clearDataStore()
-                            navController.popBackStack(R.id.loginFragment, true)
-                        }
-                        true
-                    }
-
-                    R.id.cart_item -> {
-                        navController.navigate(R.id.cartFragment)
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, this, Lifecycle.State.RESUMED)
-    }
-
-    @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
-    private fun resetMenuItemColors(selectedId: Int) {
-        val home = findViewById<ActionMenuItemView>(R.id.home_item)
-        home.setIcon(getDrawable(R.drawable.home))
-        val cart = findViewById<ActionMenuItemView>(R.id.cart_item)
-        cart.setIcon(getDrawable(R.drawable.cart))
-        if (home.id == selectedId) {
-            home.setBackgroundColor(resources.getColor(R.color.darkBlue))
-            cart.setBackgroundColor(resources.getColor(R.color.disabled))
-        } else{
-            home.setBackgroundColor(resources.getColor(R.color.disabled))
-            cart.setBackgroundColor(resources.getColor(R.color.darkBlue))
         }
     }
 }

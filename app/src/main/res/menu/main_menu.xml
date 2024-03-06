@@ -15,6 +15,18 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/admin_home_item"
+        android:icon="@drawable/home"
+        android:title="@string/home"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/order_item"
+        android:icon="@drawable/order"
+        android:title="@string/orders"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/log_out"
         android:title="@string/log_out"
         app:showAsAction="collapseActionView" />

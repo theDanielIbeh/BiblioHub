@@ -6,13 +6,11 @@ interface OrderDetailsRepository {
     suspend fun insert(orderDetails: OrderDetails)
 
     suspend fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>>
+    suspend fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails>
 
     suspend fun insertOrUpdate(orderDetails: OrderDetails)
 
     suspend fun deleteOrderDetails(orderId: Int,productId:Int)
-
-
-
 }
 
 class OfflineOrderDetailsRepository(
@@ -24,6 +22,10 @@ class OfflineOrderDetailsRepository(
 
     override suspend fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>> =
         orderDetailsDao.getOrderDetailsByOrderId(orderId)
+
+    override suspend fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails> {
+        return  orderDetailsDao.getStaticOrderDetailsByOrderId(orderId)
+    }
 
     override suspend fun insertOrUpdate(orderDetails: OrderDetails) {
         orderDetailsDao.insertOrUpdate(orderDetails)

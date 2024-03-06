@@ -177,7 +177,7 @@ class AdminHomeViewModel(
         val products = arrayListOf(
             Product(
                 id = 1,
-                name = "First",
+                title = "First",
                 author = "author",
                 description = "",
                 isbn = "",
@@ -188,7 +188,7 @@ class AdminHomeViewModel(
                 category = "Fiction"
             ), Product(
                 id = 2,
-                name = "Second",
+                title = "Second",
                 author = "author",
                 description = "",
                 isbn = "",

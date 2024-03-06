@@ -40,7 +40,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_launcher_background" />
+                    app:srcCompat="@drawable/no_image" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/name_text_view"
@@ -55,7 +55,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/memberImageView"
-                    android:text="@{viewModel.product.name}"/>
+                    android:text="@{viewModel.product.title}"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/author_text_view"

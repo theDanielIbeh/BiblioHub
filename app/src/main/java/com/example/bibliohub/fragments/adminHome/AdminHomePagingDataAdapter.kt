@@ -131,7 +131,7 @@ class AdminHomePagingDataAdapter(
                 }
                 binding.addToCartButton.text = cartButtonText
                 binding.addToCartButton.setBackgroundColor(cartButtonColor)
-                binding.nameTextView.text = product.name
+                binding.nameTextView.text = product.title
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price
                 //make sure order quantity view has item to display

@@ -33,14 +33,14 @@ class CartViewModel(
     //Variables to hold order information
     private lateinit var currentOrder: Order
     var orderSum: Double? = null
-    internal lateinit var userOrderDetails: List<OrderDetails>
+    internal val userOrderDetails: MutableList<OrderDetails> = mutableListOf()
 
     init {
         loggedInUser =
             biblioHubPreferencesRepository.getPreference(User::class.java, Constants.USER)
     }
 
-    fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
+    fun initOrderDetails(onOrderDetailsInitialized: suspend () -> Unit) {
         viewModelScope.launch {
             //check if user has existing order details
             loggedInUser.collectLatest { userInfo ->
@@ -57,13 +57,14 @@ class CartViewModel(
                 //check if user already has an order saved and assign to order details list
                 orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
                     //clear list in the event list is holding other objects
-                    userOrderDetails = it
+                    userOrderDetails.clear()
+                    userOrderDetails.addAll(it)
 
                     orderSum = it.sumOf { orderDetails ->
                         (orderDetails.price.toDoubleOrNull() ?: 0.0) * orderDetails.quantity
                     }
                     //run callback after order details initialized
-                    onOrderDetailsInitialized()
+                        onOrderDetailsInitialized()
                 }
             }
         }
@@ -140,16 +141,16 @@ class CartViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    internal fun products(cartIds: List<Int>): Flow<PagingData<Product>> =
-        productRepository.getProductsInCart(
+    internal fun getProductsByIds(productIDs: List<Int>): Flow<PagingData<Product>> =
+        productRepository.getProductsByIDs(
             10,
-            cartIds = cartIds
+            productIDs = productIDs
         )
 
     fun insertProducts() {
         val products = arrayListOf(
             Product(
-                name = "First",
+                title = "First",
                 author = "author",
                 description = "",
                 isbn = "",
@@ -160,7 +161,7 @@ class CartViewModel(
                 category = "",
                 id = 1
             ), Product(
-                name = "Second",
+                title = "Second",
                 author = "author",
                 description = "",
                 isbn = "",

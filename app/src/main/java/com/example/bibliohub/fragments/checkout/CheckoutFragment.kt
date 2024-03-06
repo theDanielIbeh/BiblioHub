@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentCheckoutBinding
+import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.FormFunctions
 import kotlinx.coroutines.launch
 
@@ -92,6 +93,8 @@ class CheckoutFragment : Fragment() {
 
     private fun completePayment() {
         lifecycleScope.launch {
+            viewModel.updateOrderStatus(Constants.Status.COMPLETED)
+            viewModel.resetCheckoutModel()
             alertModalFragment.show(requireActivity().supportFragmentManager, "AlertModalFragment")
         }
     }
