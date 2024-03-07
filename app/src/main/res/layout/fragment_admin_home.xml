@@ -99,6 +99,20 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_new_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="5dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Add New Product"
+                app:cornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/instruction"
+                app:strokeColor="#6675748F" />
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_search"
                 android:layout_width="0dp"
@@ -141,7 +155,7 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/home_recycler_item"/>
+                tools:listitem="@layout/admin_home_recycler_item"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/no_of_results_textview"

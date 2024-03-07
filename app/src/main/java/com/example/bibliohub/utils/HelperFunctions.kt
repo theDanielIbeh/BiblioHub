@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.R
+import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.fragments.login.LoginViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -52,7 +53,7 @@ object HelperFunctions {
         }
     }
 
-    fun setMenu(activity: FragmentActivity, viewModel: LoginViewModel) {
+    fun setMenu(activity: FragmentActivity, biblioHubPreferencesRepository: BiblioHubPreferencesRepository) {
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -63,6 +64,14 @@ object HelperFunctions {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+                menu.findItem(R.id.admin_home_item)?.setVisible(false)
+                menu.findItem(R.id.order_item)?.setVisible(false)
+                menu.findItem(R.id.home_item)?.setVisible(true)
+                menu.findItem(R.id.cart_item)?.setVisible(true)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -82,8 +91,9 @@ object HelperFunctions {
 
                     R.id.log_out -> {
                         activity.lifecycleScope.launch {
-                            viewModel.biblioHubPreferencesRepository.clearDataStore()
-                            navController.popBackStack(R.id.loginFragment, true)
+                            biblioHubPreferencesRepository.clearDataStore()
+                            navController.navigate(R.id.loginFragment)
+                            navController.popBackStack()
                         }
                         true
                     }
@@ -102,9 +112,7 @@ object HelperFunctions {
     @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
     private fun resetMenuItemColors(activity: FragmentActivity, selectedId: Int) {
         val home = activity.findViewById<ActionMenuItemView>(R.id.home_item)
-        home.setIcon(activity.getDrawable(R.drawable.home))
         val cart = activity.findViewById<ActionMenuItemView>(R.id.cart_item)
-        cart.setIcon(activity.getDrawable(R.drawable.cart))
         if (home.id == selectedId) {
             home.setBackgroundColor(activity.resources.getColor(R.color.darkBlue))
             cart.setBackgroundColor(activity.resources.getColor(R.color.disabled))
@@ -114,7 +122,7 @@ object HelperFunctions {
         }
     }
 
-    fun setAdminMenu(activity: FragmentActivity, viewModel: LoginViewModel) {
+    fun setAdminMenu(activity: FragmentActivity, biblioHubPreferencesRepository: BiblioHubPreferencesRepository) {
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -125,6 +133,14 @@ object HelperFunctions {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+                menu.findItem(R.id.admin_home_item)?.setVisible(true)
+                menu.findItem(R.id.order_item)?.setVisible(true)
+                menu.findItem(R.id.home_item)?.setVisible(false)
+                menu.findItem(R.id.cart_item)?.setVisible(false)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -144,8 +160,9 @@ object HelperFunctions {
 
                     R.id.log_out -> {
                         activity.lifecycleScope.launch {
-                            viewModel.biblioHubPreferencesRepository.clearDataStore()
-                            navController.popBackStack(R.id.loginFragment, true)
+                            biblioHubPreferencesRepository.clearDataStore()
+                            navController.navigate(R.id.loginFragment)
+                            navController.popBackStack()
                         }
                         true
                     }
@@ -164,9 +181,7 @@ object HelperFunctions {
     @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
     private fun resetAdminMenuItemColors(activity: FragmentActivity, selectedId: Int) {
         val adminHome = activity.findViewById<ActionMenuItemView>(R.id.admin_home_item)
-        adminHome.setIcon(activity.getDrawable(R.drawable.home))
         val order = activity.findViewById<ActionMenuItemView>(R.id.order_item)
-        order.setIcon(activity.getDrawable(R.drawable.order))
         if (adminHome.id == selectedId) {
             adminHome.setBackgroundColor(activity.resources.getColor(R.color.darkBlue))
             order.setBackgroundColor(activity.resources.getColor(R.color.disabled))

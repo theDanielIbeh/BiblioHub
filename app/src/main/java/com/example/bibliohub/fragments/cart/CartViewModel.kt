@@ -44,27 +44,25 @@ class CartViewModel(
         viewModelScope.launch {
             //check if user has existing order details
             loggedInUser.collectLatest { userInfo ->
-                if (userInfo == null) {
-                    //throw null error when user null to stop app flow
-                    throw NullPointerException()
-                }
-                //get current order info else create new order
-                currentOrder =
-                    orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
-                        userInfo.id
-                    )
+                if (userInfo != null) {
+                    //get current order info else create new order
+                    currentOrder =
+                        orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
+                            userInfo.id
+                        )
 
-                //check if user already has an order saved and assign to order details list
-                orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
-                    //clear list in the event list is holding other objects
-                    userOrderDetails.clear()
-                    userOrderDetails.addAll(it)
+                    //check if user already has an order saved and assign to order details list
+                    orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
+                        //clear list in the event list is holding other objects
+                        userOrderDetails.clear()
+                        userOrderDetails.addAll(it)
 
-                    orderSum = it.sumOf { orderDetails ->
-                        (orderDetails.price.toDoubleOrNull() ?: 0.0) * orderDetails.quantity
-                    }
-                    //run callback after order details initialized
+                        orderSum = it.sumOf { orderDetails ->
+                            (orderDetails.price.toDoubleOrNull() ?: 0.0) * orderDetails.quantity
+                        }
+                        //run callback after order details initialized
                         onOrderDetailsInitialized()
+                    }
                 }
             }
         }

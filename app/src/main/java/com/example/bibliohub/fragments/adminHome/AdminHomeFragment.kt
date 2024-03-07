@@ -1,14 +1,10 @@
 package com.example.bibliohub.fragments.adminHome
 
-import android.annotation.SuppressLint
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +23,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingDataAdapter.HomeListener {
+class AdminHomeFragment : BaseSearchableFragment<Product>(),
+    AdminHomePagingDataAdapter.HomeListener {
 
     companion object {
         private val TAG = AdminHomeFragment::getTag
@@ -50,23 +47,6 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingData
         searchText = binding.etSearch
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val adminHome = activity?.findViewById<ActionMenuItemView>(R.id.admin_home_item)
-        val order = activity?.findViewById<ActionMenuItemView>(R.id.order_item)
-        adminHome?.setBackgroundColor(resources.getColor(R.color.darkBlue))
-        order?.setBackgroundColor(resources.getColor(R.color.disabled))
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu){
-        super.onPrepareOptionsMenu(menu)
-        menu.getItem(R.id.admin_home_item).isVisible = true
-        menu.getItem(R.id.order_item).isVisible = true
-        menu.getItem(R.id.home_item).isVisible = false
-        menu.getItem(R.id.cart_item).isVisible = false
-    }
-
     override fun initCompulsoryVariables() {
         viewModelFilterText = viewModel.mFilterText
         searchCallback = { it -> viewModel.search(it) }
@@ -82,32 +62,37 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingData
     }
 
     override fun initRecycler() {
-        viewModel.initOrderDetails {
-            adapter = AdminHomePagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
-            lifecycleScope.launch {
-                viewModel.products.collectLatest { pagingData ->
-                    // submitData suspends until loading this generation of data stops
-                    // so be sure to use collectLatest {} when presenting a Flow<PagingData>
-                    if (viewModel.selectedCategory?.isEmpty() == true) {
-                        adapter.submitData(lifecycle, pagingData)
-                    }else{
-                        adapter.submitData(lifecycle, pagingData.filter { product -> product.category.equals(other = viewModel.selectedCategory, ignoreCase = true) })
-                    }
-                    adapter.loadStateFlow.map { it.refresh }
-                        .distinctUntilChanged()
-                        .collect {
-                            if (it is LoadState.NotLoading) {
-                                setSearchResult(adapter.itemCount)
-                            }
-                        }
+        adapter = AdminHomePagingDataAdapter(requireContext(), this)
+        lifecycleScope.launch {
+            viewModel.products.collectLatest { pagingData ->
+                // submitData suspends until loading this generation of data stops
+                // so be sure to use collectLatest {} when presenting a Flow<PagingData>
+                if (viewModel.selectedCategory?.isEmpty() == true) {
+                    adapter.submitData(lifecycle, pagingData)
+                } else {
+                    adapter.submitData(
+                        lifecycle,
+                        pagingData.filter { product ->
+                            product.category.equals(
+                                other = viewModel.selectedCategory,
+                                ignoreCase = true
+                            )
+                        })
                 }
+                adapter.loadStateFlow.map { it.refresh }
+                    .distinctUntilChanged()
+                    .collect {
+                        if (it is LoadState.NotLoading) {
+                            setSearchResult(adapter.itemCount)
+                        }
+                    }
             }
-            binding.recyclerView.layoutManager = LinearLayoutManager(context)
-            binding.recyclerView.itemAnimator = DefaultItemAnimator()
-            binding.recyclerView.adapter = adapter
-            (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
-                false
         }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.itemAnimator = DefaultItemAnimator()
+        binding.recyclerView.adapter = adapter
+        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
+            false
     }
 
     override fun setSearchResult(listSize: Int) {
@@ -115,10 +100,6 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingData
             View.VISIBLE
         val size = if (listSize >= 30) "$listSize+" else listSize.toString()
         binding.noOfResultsTextview.text = getString(R.string.y_results, size)
-    }
-
-    override fun addOrUpdateCart(product: Product, quantity: Int) {
-        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity)
     }
 
     private fun refresh() {
@@ -177,5 +158,13 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(), AdminHomePagingData
             requireContext(),
             android.R.layout.simple_dropdown_item_1line, stringArr
         )
+    }
+
+    override fun editProduct(product: Product) {
+
+    }
+
+    override fun deleteProduct(product: Product) {
+
     }
 }

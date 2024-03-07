@@ -8,10 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.Constants.IS_ADMIN
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
-import com.example.bibliohub.utils.HelperFunctions.setAdminMenu
-import com.example.bibliohub.utils.HelperFunctions.setMenu
 import kotlinx.coroutines.launch
-
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
@@ -39,10 +36,10 @@ class MainActivity : AppCompatActivity() {
             isLoggedIn.collect {
                 if (it == true) {
                     if (isAdmin.equals(true)) {
-                        setAdminMenu(this@MainActivity, viewModel)
+//                        setAdminMenu(this@MainActivity, viewModel.biblioHubPreferencesRepository)
                         navGraph.setStartDestination(startDestId = R.id.adminHomeFragment)
                     } else {
-                        setMenu(this@MainActivity, viewModel)
+//                        setMenu(this@MainActivity, viewModel.biblioHubPreferencesRepository)
                         navGraph.setStartDestination(startDestId = R.id.homeFragment)
                     }
                 } else {

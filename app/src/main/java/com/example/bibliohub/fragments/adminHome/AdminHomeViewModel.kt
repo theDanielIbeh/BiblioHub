@@ -32,12 +32,13 @@ class AdminHomeViewModel(
 ) : ViewModel() {
     private lateinit var activeOrder: Flow<Order?>
     private var loggedInUser: Flow<User?>
+
     //Variables to hold order information
     private lateinit var currentOrder: Order
     internal lateinit var userOrderDetails: List<OrderDetails>
     internal var selectedCategory: String? = ""
 
-//    var cart: MutableStateFlow<List<OrderDetails>?> = MutableStateFlow(listOf())
+    //    var cart: MutableStateFlow<List<OrderDetails>?> = MutableStateFlow(listOf())
 //    var orderDetailsInOrder: Flow<List<OrderDetails>?> = flowOf(listOf())
     private var filterText: MutableStateFlow<String> = MutableStateFlow("%%")
     var mFilterText: String? = "%%"
@@ -69,22 +70,20 @@ class AdminHomeViewModel(
         viewModelScope.launch {
             //check if user has existing order details
             loggedInUser.collectLatest { userInfo ->
-                if (userInfo == null) {
-                    //throw null error when user null to stop app flow
-                    throw NullPointerException()
-                }
-                //get current order info else create new order
-                currentOrder =
-                    orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
-                        userInfo.id
-                    )
+                if (userInfo != null) {
+                    //get current order info else create new order
+                    currentOrder =
+                        orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
+                            userInfo.id
+                        )
 
-                //check if user already has an order saved and assign to order details list
-                orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
-                    //clear list in the event list is holding other objects
-                    userOrderDetails = it
-                    //run callback after order details initialized
-                    onOrderDetailsInitialized()
+                    //check if user already has an order saved and assign to order details list
+                    orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
+                        //clear list in the event list is holding other objects
+                        userOrderDetails = it
+                        //run callback after order details initialized
+                        onOrderDetailsInitialized()
+                    }
                 }
             }
         }
@@ -92,7 +91,7 @@ class AdminHomeViewModel(
 
 
     fun createOrUpdateOrderDetails(product: Product, quantity: Int) {
-        viewModelScope.launch{//check if order exist in order details list
+        viewModelScope.launch {//check if order exist in order details list
             val existingOrderDetail =
                 userOrderDetails.firstOrNull {
                     it.orderId == currentOrder.id && it.productId == product.id
@@ -111,7 +110,7 @@ class AdminHomeViewModel(
                 return@launch
             }
             //Update order detail if exist
-            if (quantity==0){
+            if (quantity == 0) {
                 //delete order information if user updates quantity to zero
                 orderDetailsRepository.deleteOrderDetails(
                     orderId = existingOrderDetail.orderId,

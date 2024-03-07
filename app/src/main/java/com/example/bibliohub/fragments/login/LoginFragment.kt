@@ -17,8 +17,6 @@ import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentLoginBinding
 import com.example.bibliohub.utils.FormFunctions.validateLoginEmail
 import com.example.bibliohub.utils.FormFunctions.validateLoginPassword
-import com.example.bibliohub.utils.HelperFunctions.setAdminMenu
-import com.example.bibliohub.utils.HelperFunctions.setMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,7 +37,7 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(inflater)
         Log.d(TAG, TAG)
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
 
         with(binding) {
@@ -95,7 +93,7 @@ class LoginFragment : Fragment() {
                 )
             ) {
                 viewModel.saveAdminPreferences()
-                setAdminMenu(requireActivity(), viewModel)
+//                setAdminMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
                 findNavController().navigate(R.id.adminHomeFragment)
             } else {
                 val user =
@@ -104,7 +102,7 @@ class LoginFragment : Fragment() {
                     if (user.password == password) {
                         viewModel.resetLoginModel()
                         viewModel.savePreferences(user)
-                        setMenu(requireActivity(), viewModel)
+//                        setMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
                         findNavController().navigate(R.id.homeFragment)
                     } else {
                         binding.passwordLayout.error = "Incorrect password"

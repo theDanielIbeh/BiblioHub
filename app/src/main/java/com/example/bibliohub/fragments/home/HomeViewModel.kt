@@ -31,7 +31,7 @@ class HomeViewModel(
     private val orderRepository: OrderRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val productRepository: ProductRepository,
-    biblioHubPreferencesRepository: BiblioHubPreferencesRepository
+    internal val biblioHubPreferencesRepository: BiblioHubPreferencesRepository
 ) : ViewModel() {
     private lateinit var activeOrder: Flow<Order?>
     private var loggedInUser: Flow<User?>
@@ -73,25 +73,23 @@ class HomeViewModel(
         viewModelScope.launch {
             //check if user has existing order details
             loggedInUser.collectLatest { userInfo ->
-                if (userInfo == null) {
-                    //throw null error when user null to stop app flow
-                    throw NullPointerException()
-                }
-                //get current order info else create new order
-                currentOrder =
-                    orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
-                        userInfo.id
-                    )
+                if (userInfo != null) {
+                    //get current order info else create new order
+                    currentOrder =
+                        orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
+                            userInfo.id
+                        )
 
-                //check if user already has an order saved and assign to order details list
-                orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
-                    Log.d("Order", it.toString())
-                    updateOrderDetailsList(it) {
-                        //run callback after order details initialized with check if recycler has
-                        // already ben initialized
+                    //check if user already has an order saved and assign to order details list
+                    orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
+                        Log.d("Order", it.toString())
+                        updateOrderDetailsList(it) {
+                            //run callback after order details initialized with check if recycler has
+                            // already ben initialized
                             onOrderDetailsInitialized()
-                    }
+                        }
 
+                    }
                 }
             }
         }

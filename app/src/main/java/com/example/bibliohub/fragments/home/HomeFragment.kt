@@ -4,14 +4,17 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -22,12 +25,15 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentHomeBinding
+import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.BaseSearchableFragment
+import com.example.bibliohub.utils.HelperFunctions.setMenu
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+
 
 class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.HomeListener {
 
@@ -50,6 +56,7 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
 
         searchButton = binding.imageButtonStopSearch
         searchText = binding.etSearch
+//        setMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
     }
 
     @SuppressLint("RestrictedApi")
@@ -59,14 +66,6 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
         home?.setBackgroundColor(resources.getColor(R.color.darkBlue))
         val cart = activity?.findViewById<ActionMenuItemView>(R.id.cart_item)
         cart?.setBackgroundColor(resources.getColor(R.color.disabled))
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu){
-        super.onPrepareOptionsMenu(menu)
-        menu.getItem(R.id.admin_home_item).isVisible = false
-        menu.getItem(R.id.order_item).isVisible = false
-        menu.getItem(R.id.home_item).isVisible = true
-        menu.getItem(R.id.cart_item).isVisible = true
     }
     override fun initCompulsoryVariables() {
         viewModelFilterText = viewModel.mFilterText
