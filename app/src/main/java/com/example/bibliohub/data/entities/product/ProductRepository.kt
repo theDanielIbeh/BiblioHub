@@ -1,16 +1,20 @@
 package com.example.bibliohub.data.entities.product
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import kotlinx.coroutines.flow.Flow
+import androidx.paging.liveData
 
 interface ProductRepository {
     suspend fun insert(product: Product)
-    suspend fun getAvailableProducts(pageSize: Int, filterText: String?): Flow<PagingData<Product>>
-    fun getProductsByIDs(pageSize: Int, productIDs: List<Int>): Flow<PagingData<Product>>
-    fun getProductsInCart(pageSize: Int, cartIds: List<Int>): Flow<PagingData<Product>>
-    suspend fun getAllProducts(pageSize: Int, filterText: String?): Flow<PagingData<Product>>
+    suspend fun delete(product: Product)
+
+    suspend fun getProductById(productId: Int): Product?
+    fun getAvailableProducts(pageSize: Int, filterText: String?): LiveData<PagingData<Product>>
+    fun getProductsByIDs(pageSize: Int, productIDs: List<Int>): LiveData<PagingData<Product>>
+    fun getProductsInCart(pageSize: Int, cartIds: List<Int>): LiveData<PagingData<Product>>
+    fun getAllProducts(pageSize: Int, filterText: String?): LiveData<PagingData<Product>>
 }
 
 class OfflineProductRepository(
@@ -20,40 +24,47 @@ class OfflineProductRepository(
         productDao.insert(product = product)
     }
 
-    override suspend fun getAvailableProducts(
+    override suspend fun delete(product: Product) {
+        productDao.delete(product = product)
+    }
+
+    override suspend fun getProductById(productId: Int): Product? =
+        productDao.getProductById(productId = productId)
+
+    override fun getAvailableProducts(
         pageSize: Int,
         filterText: String?
-    ): Flow<PagingData<Product>> = Pager(
+    ): LiveData<PagingData<Product>> = Pager(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
             productDao.getAvailableProducts(filterText)
         }
-    ).flow
+    ).liveData
 
     override fun getProductsByIDs(
         pageSize: Int,
         productIDs: List<Int>
-    ): Flow<PagingData<Product>> = Pager(
+    ): LiveData<PagingData<Product>> = Pager(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
             productDao.getProductsByIDs(productIDs)
         }
-    ).flow
+    ).liveData
 
-    override fun getProductsInCart(pageSize: Int, cartIds: List<Int>): Flow<PagingData<Product>> = Pager(
+    override fun getProductsInCart(pageSize: Int, cartIds: List<Int>): LiveData<PagingData<Product>> = Pager(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
             productDao.getProductsInCart(cartIds)
         }
-    ).flow
+    ).liveData
 
-    override suspend fun getAllProducts(
+    override fun getAllProducts(
         pageSize: Int,
         filterText: String?
-    ): Flow<PagingData<Product>> = Pager(
+    ): LiveData<PagingData<Product>> = Pager(
         config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
         pagingSourceFactory = {
             productDao.getAllProducts(filterText)
         }
-    ).flow
+    ).liveData
 }

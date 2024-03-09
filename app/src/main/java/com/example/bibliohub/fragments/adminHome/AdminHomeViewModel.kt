@@ -1,7 +1,11 @@
 package com.example.bibliohub.fragments.adminHome
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,154 +21,33 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AdminHomeViewModel(
     private val orderRepository: OrderRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val productRepository: ProductRepository,
-    biblioHubPreferencesRepository: BiblioHubPreferencesRepository
+    val biblioHubPreferencesRepository: BiblioHubPreferencesRepository
 ) : ViewModel() {
-    private lateinit var activeOrder: Flow<Order?>
-    private var loggedInUser: Flow<User?>
-
-    //Variables to hold order information
-    private lateinit var currentOrder: Order
-    internal lateinit var userOrderDetails: List<OrderDetails>
     internal var selectedCategory: String? = ""
 
-    //    var cart: MutableStateFlow<List<OrderDetails>?> = MutableStateFlow(listOf())
-//    var orderDetailsInOrder: Flow<List<OrderDetails>?> = flowOf(listOf())
-    private var filterText: MutableStateFlow<String> = MutableStateFlow("%%")
+    private var filterText: MutableLiveData<String> = MutableLiveData("%%")
     var mFilterText: String? = "%%"
 
-    init {
-        loggedInUser =
-            biblioHubPreferencesRepository.getPreference(User::class.java, Constants.USER)
-//        viewModelScope.launch {
-//            loggedInUser.collectLatest { user ->
-//                activeOrder = user?.let { getActiveOrderByUserId(it.id) } as Flow<Order?>
-//                activeOrder.collectLatest {
-//                    if (it == null) {
-//                        createNewOrder(userId = user.id)
-//                    } else {
-//                        Log.d("Order", it.toString())
-//                        orderDetailsInOrder = getOrderDetailsByOrderId(it.id)
-//                        orderDetailsInOrder.collectLatest { ca ->
-//                            Log.d("Order", ca.toString())
-//                            cart.update { ca }
-//                            Log.d("Order", cart.value.toString())
-//                        }
-//                    }
-//                }
-//            }
-//        }
-    }
-
-    fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
-        viewModelScope.launch {
-            //check if user has existing order details
-            loggedInUser.collectLatest { userInfo ->
-                if (userInfo != null) {
-                    //get current order info else create new order
-                    currentOrder =
-                        orderRepository.getStaticActiveOrderByUserId(userInfo.id) ?: createNewOrder(
-                            userInfo.id
-                        )
-
-                    //check if user already has an order saved and assign to order details list
-                    orderDetailsRepository.getOrderDetailsByOrderId(currentOrder.id).collectLatest {
-                        //clear list in the event list is holding other objects
-                        userOrderDetails = it
-                        //run callback after order details initialized
-                        onOrderDetailsInitialized()
-                    }
-                }
-            }
-        }
-    }
-
-
-    fun createOrUpdateOrderDetails(product: Product, quantity: Int) {
-        viewModelScope.launch {//check if order exist in order details list
-            val existingOrderDetail =
-                userOrderDetails.firstOrNull {
-                    it.orderId == currentOrder.id && it.productId == product.id
-                }
-
-            if (existingOrderDetail == null) {
-                //if order details not exist create new
-                orderDetailsRepository.insert(
-                    OrderDetails(
-                        orderId = currentOrder.id,
-                        productId = product.id,
-                        quantity = quantity,
-                        price = product.price
-                    )
-                )
-                return@launch
-            }
-            //Update order detail if exist
-            if (quantity == 0) {
-                //delete order information if user updates quantity to zero
-                orderDetailsRepository.deleteOrderDetails(
-                    orderId = existingOrderDetail.orderId,
-                    productId = existingOrderDetail.productId
-                )
-                return@launch
-            }
-            //update order quantity when user updates order
-            orderDetailsRepository.insertOrUpdate(existingOrderDetail.copy(quantity = quantity))
-        }
-    }
-
-
-    private suspend fun getActiveOrderByUserId(userId: Int): Flow<Order?> =
-        orderRepository.getActiveOrderByUserId(userId = userId)
-
-    private suspend fun createNewOrder(userId: Int): Order {
-        val newOrder = Order(customerId = userId, status = Constants.Status.PENDING, date = "")
-        orderRepository.insert(newOrder)
-        return newOrder
-    }
-
-    private suspend fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>?> =
-        orderDetailsRepository.getOrderDetailsByOrderId(orderId)
-
-    fun createNewOrderDetail(product: Product, quantity: String) {
-        viewModelScope.launch {
-            activeOrder.collectLatest {
-                if (it != null) {
-                    val newOrderDetail = OrderDetails(
-                        orderId = it.id,
-                        productId = product.id,
-                        quantity = quantity.toIntOrNull() ?: 0,
-                        price = product.price
-                    )
-                    orderDetailsRepository.insert(newOrderDetail)
-                }
-            }
-
-        }
-    }
-
-    fun deleteFromCart(productId: Int) {
-        viewModelScope.launch {
-            orderDetailsRepository.deleteOrderDetails(currentOrder.id, productId)
-        }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    internal val products: Flow<PagingData<Product>> = filterText.flatMapLatest {
+    internal val products: LiveData<PagingData<Product>> = filterText.switchMap {
         productRepository.getAllProducts(
             10,
             it,
         ).cachedIn(viewModelScope)
+    }
+
+    internal fun deleteProduct(product: Product) {
+        viewModelScope.launch {
+            productRepository.delete(product = product)
+        }
     }
 
     fun search(searchQuery: String) {

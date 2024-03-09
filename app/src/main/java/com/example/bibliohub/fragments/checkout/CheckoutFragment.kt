@@ -11,8 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentCheckoutBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.FormFunctions
@@ -34,6 +32,22 @@ class CheckoutFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+
+        //check if user has existing order details
+        viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
+            //get current order info else create new order
+            lifecycleScope.launch {
+                viewModel.currentOrder =
+                    userInfo?.id?.let { viewModel.orderRepository.getStaticActiveOrderByUserId(it) }
+            }
+        }
+
+        setBinding()
+
+        return binding.root
+    }
+
+    private fun setBinding() {
         with(binding) {
             addressEditText.doAfterTextChanged {
                 FormFunctions.validateName(it.toString(), binding.addressLayout)
@@ -87,8 +101,6 @@ class CheckoutFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
     }
 
     private fun completePayment() {

@@ -17,6 +17,12 @@
         android:theme="@style/Theme.BiblioHub"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomerActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:hardwareAccelerated="false">

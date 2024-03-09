@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/customer_nav_graph"
+    app:startDestination="@+id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.bibliohub.fragments.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.bibliohub.fragments.cart.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/adminHomeFragment"
+        android:name="com.example.bibliohub.fragments.adminHome.AdminHomeFragment"
+        android:label="fragment_admin_home"
+        tools:layout="@layout/fragment_admin_home" >
+        <action
+            android:id="@+id/action_adminHomeFragment_to_productFormFragment"
+            app:destination="@id/productFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.bibliohub.fragments.productDetails.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" >
+        <argument
+            android:name="product"
+            app:argType="com.example.bibliohub.data.entities.product.Product" />
+    </fragment>
+    <fragment
+        android:id="@+id/productFormFragment"
+        android:name="com.example.bibliohub.fragments.productForm.ProductFormFragment"
+        android:label="fragment_product_form"
+        tools:layout="@layout/fragment_product_form" >
+        <argument
+            android:name="product"
+            app:argType="com.example.bibliohub.data.entities.product.Product"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminOrdersFragment"
+        android:name="com.example.bibliohub.fragments.adminOrders.AdminOrdersFragment"
+        android:label="fragment_admin_orders"
+        tools:layout="@layout/fragment_admin_orders" >
+        <action
+            android:id="@+id/action_adminOrdersFragment_to_adminOrderDetailsFragment"
+            app:destination="@id/adminOrderDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminOrderDetailsFragment"
+        android:name="com.example.bibliohub.fragments.adminOrderDetails.AdminOrderDetailsFragment"
+        android:label="fragment_admin_order_details"
+        tools:layout="@layout/fragment_admin_order_details" >
+        <argument
+            android:name="order"
+            app:argType="com.example.bibliohub.data.entities.order.Order" />
+    </fragment>
+</navigation>

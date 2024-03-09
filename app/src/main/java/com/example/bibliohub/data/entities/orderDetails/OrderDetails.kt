@@ -3,7 +3,7 @@ package com.example.bibliohub.data.entities.orderDetails
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
-@Entity(tableName = "order_details", primaryKeys = ["order_id","product_id"])
+@Entity(tableName = "order_details", primaryKeys = ["order_id", "product_id"])
 data class OrderDetails(
     @ColumnInfo(name = "order_id")
     var orderId: Int,

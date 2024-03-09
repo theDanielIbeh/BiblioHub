@@ -1,10 +1,11 @@
 package com.example.bibliohub.data.entities.orderDetails
 
+import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OrderDetailsDao {
@@ -15,11 +16,23 @@ interface OrderDetailsDao {
     suspend fun insertOrUpdate(orderDetails: OrderDetails)
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
-    fun getOrderDetailsByOrderId(orderId: Int): Flow<List<OrderDetails>>
+    fun getOrderDetailsByOrderId(orderId: Int): LiveData<List<OrderDetails>>
+
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
     fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails>
 
-    @Query("DELETE FROM order_details WHERE order_id = :orderId AND " +
-            "product_id = :productId")
-    suspend fun deleteOrderDetailsByOrderAndProductID(orderId: Int, productId:Int)
+    @Query(
+        "DELETE FROM order_details WHERE order_id = :orderId AND " +
+                "product_id = :productId"
+    )
+    suspend fun deleteOrderDetailsByOrderAndProductID(orderId: Int, productId: Int)
+
+    @Query("SELECT * FROM order_details WHERE order_id = :orderId")
+    fun getAllOrderDetailsByOrderId(orderId: Int): List<OrderDetails>?
+
+    @Query("SELECT * FROM order_details WHERE order_id = :orderId")
+    fun getAllOrderDetailsByIdPaging(orderId: Int): PagingSource<Int, OrderDetails>
+
+    @Query("SELECT * FROM `order_details`")
+    fun getAllOrderDetails(): PagingSource<Int, OrderDetails>
 }

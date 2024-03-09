@@ -9,55 +9,10 @@
         android:id="@+id/loginFragment"
         android:name="com.example.bibliohub.fragments.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.bibliohub.fragments.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.bibliohub.fragments.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_productDetailsFragment"
-            app:destination="@id/productDetailsFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_productFormFragment"
-            app:destination="@id/productFormFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/cartFragment"
-        android:name="com.example.bibliohub.fragments.cart.CartFragment"
-        android:label="fragment_cart"
-        tools:layout="@layout/fragment_cart" />
-    <fragment
-        android:id="@+id/adminHomeFragment"
-        android:name="com.example.bibliohub.fragments.adminHome.AdminHomeFragment"
-        android:label="fragment_admin_home"
-        tools:layout="@layout/fragment_admin_home" />
-    <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="com.example.bibliohub.fragments.productDetails.ProductDetailsFragment"
-        android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" >
-        <argument
-            android:name="product"
-            app:argType="com.example.bibliohub.data.entities.product.Product" />
-    </fragment>
-    <fragment
-        android:id="@+id/productFormFragment"
-        android:name="com.example.bibliohub.fragments.productForm.ProductFormFragment"
-        android:label="fragment_product_form"
-        tools:layout="@layout/fragment_product_form" >
-        <argument
-            android:name="product"
-            app:argType="com.example.bibliohub.data.entities.product.Product"
-            app:nullable="true" />
-    </fragment>
 </navigation>

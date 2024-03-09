@@ -10,9 +10,12 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -87,7 +90,7 @@ class BiblioHubPreferencesRepository(
 
 
     @Suppress("UNCHECKED_CAST")
-    fun <T: Any?> getPreference(keyClassType: Class<T>, key: String): Flow<T?> =
+    fun <T: Any?> getPreference(keyClassType: Class<T>, key: String): LiveData<T?> =
         datastore.data.catch {
             if (it is IOException) {
                 Log.e(TAG, "Error reading preferences.", it)
@@ -139,7 +142,7 @@ class BiblioHubPreferencesRepository(
                     }
                 }
 
-            }
+            }.distinctUntilChanged().asLiveData()
 
     suspend fun clearDataStore(){
         datastore.edit { it.clear() }

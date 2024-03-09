@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="hasStatusChanged"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="20dp"
+            app:contentPaddingBottom="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_constraint_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/info"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/info" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/name_colon"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/info"
+                    tools:layout_editor_absoluteY="8dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/name_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/info"
+                    tools:layout_editor_absoluteY="8dp"
+                    tools:text="Book" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/date_title_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name_text_view"
+                    android:text="@string/date_colon" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/date_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/date_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/name_text_view"
+                    tools:text="Book" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/price_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/total_price_colon"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_text_view"
+                    tools:layout_editor_absoluteX="132dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/price_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/price_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@id/date_text_view"
+                    tools:text="Book" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/status_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/status_colon"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/price_title_text_view"
+                    tools:layout_editor_absoluteX="132dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/status_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/status_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@id/price_title_text_view"
+                    tools:text="Book" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="@{hasStatusChanged ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toBottomOf="@+id/status_text_view">
+
+                    <Button
+                        android:id="@+id/reject_product_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:hapticFeedbackEnabled="false"
+                        android:backgroundTint="@color/red"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="@string/reject"
+                        android:textColor="@color/white"
+                        app:cornerRadius="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <Button
+                        android:id="@+id/approve_product_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:hapticFeedbackEnabled="false"
+                        android:insetTop="0dp"
+                        android:backgroundTint="@color/lightGreen"
+                        android:insetBottom="0dp"
+                        android:text="@string/approve"
+                        android:textColor="@color/white"
+                        app:cornerRadius="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

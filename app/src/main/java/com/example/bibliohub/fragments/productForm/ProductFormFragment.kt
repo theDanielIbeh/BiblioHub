@@ -152,7 +152,9 @@ class ProductFormFragment : Fragment() {
                         viewModel?.productModelToProduct(
                             product, currentFilePath)
                     }
+
                     findNavController().popBackStack(R.id.adminHomeFragment, true)
+                    viewModel?.resetProductModel()
                 } else {
                     Toast.makeText(
                         requireContext(),

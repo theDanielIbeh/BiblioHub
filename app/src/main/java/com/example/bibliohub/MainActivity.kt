@@ -1,23 +1,21 @@
 package com.example.bibliohub
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
-import com.example.bibliohub.utils.Constants.IS_ADMIN
+import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
-import kotlinx.coroutines.launch
+import com.example.bibliohub.utils.HelperFunctions
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        supportActionBar?.setDisplayShowHomeEnabled(true);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -30,24 +28,25 @@ class MainActivity : AppCompatActivity() {
         )
         val isAdmin = viewModel.biblioHubPreferencesRepository.getPreference(
             Boolean::class.java,
-            IS_ADMIN
+            Constants.IS_ADMIN
         )
-        lifecycleScope.launch {
-            isLoggedIn.collect {
-                if (it == true) {
-                    if (isAdmin.equals(true)) {
-//                        setAdminMenu(this@MainActivity, viewModel.biblioHubPreferencesRepository)
-                        navGraph.setStartDestination(startDestId = R.id.adminHomeFragment)
+        isLoggedIn.observe(this@MainActivity) {
+            if (it == true) {
+                isAdmin.observe(this@MainActivity) { admin ->
+                    Log.d("AppActivity", admin.toString())
+                    if (admin == true) {
+                        val intent = Intent(this@MainActivity, AdminActivity::class.java)
+                        startActivity(intent)
                     } else {
-//                        setMenu(this@MainActivity, viewModel.biblioHubPreferencesRepository)
-                        navGraph.setStartDestination(startDestId = R.id.homeFragment)
+                        val intent = Intent(this@MainActivity, CustomerActivity::class.java)
+                        startActivity(intent)
                     }
-                } else {
-                    navGraph.setStartDestination(startDestId = R.id.loginFragment)
                 }
-                val navController = navHostFragment.navController
-                navController.setGraph(navGraph, intent.extras)
+            } else {
+                navGraph.setStartDestination(startDestId = R.id.loginFragment)
             }
+            val navController = navHostFragment.navController
+            navController.setGraph(navGraph, intent.extras)
         }
     }
 }

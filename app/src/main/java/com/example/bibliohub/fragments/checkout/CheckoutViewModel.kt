@@ -1,5 +1,7 @@
 package com.example.bibliohub.fragments.checkout
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,11 +14,9 @@ import com.example.bibliohub.data.entities.order.OrderRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 data class CheckoutModel(
@@ -30,32 +30,19 @@ data class CheckoutModel(
 
 class CheckoutViewModel(
     private val userRepository: UserRepository,
-    private val orderRepository: OrderRepository,
+    val orderRepository: OrderRepository,
     biblioHubPreferencesRepository: BiblioHubPreferencesRepository
 ) : ViewModel() {
     private var _checkoutModel: MutableStateFlow<CheckoutModel> = MutableStateFlow(CheckoutModel())
     val checkoutModel: StateFlow<CheckoutModel> = _checkoutModel.asStateFlow()
-    private var loggedInUser: Flow<User?>
+    var loggedInUser: LiveData<User?>
 
     //Variables to hold order information
-    private var currentOrder: Order? = null
+    var currentOrder: Order? = null
 
     init {
         loggedInUser =
             biblioHubPreferencesRepository.getPreference(User::class.java, Constants.USER)
-
-        viewModelScope.launch {
-            //check if user has existing order details
-            loggedInUser.collectLatest { userInfo ->
-                if (userInfo == null) {
-                    //throw null error when user null to stop app flow
-                    throw NullPointerException()
-                }
-                //get current order info else create new order
-                currentOrder =
-                    orderRepository.getStaticActiveOrderByUserId(userInfo.id)
-            }
-        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.bibliohub.data.entities.user
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,10 +15,15 @@ interface UserDao {
     @Query(
         "SELECT * FROM user"
     )
-    fun getAllUsers(): Flow<List<User>>
+    fun getAllUsers(): LiveData<List<User>>
 
     @Query(
         "SELECT * FROM user where email = :email"
     )
     fun getUser(email: String): User?
+
+    @Query(
+        "SELECT * FROM user where id = :userId"
+    )
+    fun getUserById(userId: Int): User?
 }

@@ -1,13 +1,18 @@
 package com.example.bibliohub.fragments.adminHome
 
+import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.filter
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -18,10 +23,10 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentAdminHomeBinding
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class AdminHomeFragment : BaseSearchableFragment<Product>(),
     AdminHomePagingDataAdapter.HomeListener {
@@ -45,6 +50,7 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
 
         searchButton = binding.imageButtonStopSearch
         searchText = binding.etSearch
+        setOnBackPressedCallback()
     }
 
     override fun initCompulsoryVariables() {
@@ -59,12 +65,19 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
     override fun setBinding() {
         setupStatusFilter()
         binding.btn.setOnClickListener { refresh() }
+        binding.addNewBtn.setOnClickListener {
+            findNavController().navigate(
+                AdminHomeFragmentDirections.actionAdminHomeFragmentToProductFormFragment(
+                    null
+                )
+            )
+        }
     }
 
     override fun initRecycler() {
         adapter = AdminHomePagingDataAdapter(requireContext(), this)
         lifecycleScope.launch {
-            viewModel.products.collectLatest { pagingData ->
+            viewModel.products.observe(viewLifecycleOwner) { pagingData ->
                 // submitData suspends until loading this generation of data stops
                 // so be sure to use collectLatest {} when presenting a Flow<PagingData>
                 if (viewModel.selectedCategory?.isEmpty() == true) {
@@ -79,13 +92,15 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
                             )
                         })
                 }
-                adapter.loadStateFlow.map { it.refresh }
-                    .distinctUntilChanged()
-                    .collect {
-                        if (it is LoadState.NotLoading) {
-                            setSearchResult(adapter.itemCount)
+                lifecycleScope.launch {
+                    adapter.loadStateFlow.map { it.refresh }
+                        .distinctUntilChanged()
+                        .collect {
+                            if (it is LoadState.NotLoading) {
+                                setSearchResult(adapter.itemCount)
+                            }
                         }
-                    }
+                }
             }
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -130,7 +145,7 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
             binding.acvFilter.showDropDown()
         }
 
-        binding.acvFilter.setOnItemClickListener { _, _, i, l ->
+        binding.acvFilter.setOnItemClickListener { _, _, _, _ ->
             viewModel.selectedCategory = binding.acvFilter.text.toString()
             initRecycler()
         }
@@ -161,10 +176,25 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
     }
 
     override fun editProduct(product: Product) {
-
+        findNavController().navigate(
+            AdminHomeFragmentDirections.actionAdminHomeFragmentToProductFormFragment(
+                product
+            )
+        )
     }
 
     override fun deleteProduct(product: Product) {
+        viewModel.deleteProduct(product = product)
+    }
 
+    private fun setOnBackPressedCallback() {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAffinity()
+                    exitProcess(0)
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 }

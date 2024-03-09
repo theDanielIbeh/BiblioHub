@@ -3,6 +3,7 @@ package com.example.bibliohub.utils
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.example.bibliohub.MainActivity
 import com.example.bibliohub.R
 import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.fragments.login.LoginViewModel
@@ -59,7 +61,7 @@ object HelperFunctions {
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
         // the menu should be visible
         val navController =
-            (activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+            (activity.supportFragmentManager.findFragmentById(R.id.customer_nav_host_fragment) as NavHostFragment).navController
         activity.addMenuProvider(object : MenuProvider {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -72,6 +74,7 @@ object HelperFunctions {
                 menu.findItem(R.id.order_item)?.setVisible(false)
                 menu.findItem(R.id.home_item)?.setVisible(true)
                 menu.findItem(R.id.cart_item)?.setVisible(true)
+//                menu.findItem(R.id.home_item)?.icon?.setTint(activity.resources.getColor(R.color.darkBlue))
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -91,9 +94,7 @@ object HelperFunctions {
 
                     R.id.log_out -> {
                         activity.lifecycleScope.launch {
-                            biblioHubPreferencesRepository.clearDataStore()
-                            navController.navigate(R.id.loginFragment)
-                            navController.popBackStack()
+                            logout(biblioHubPreferencesRepository, activity)
                         }
                         true
                     }
@@ -128,7 +129,7 @@ object HelperFunctions {
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
         // the menu should be visible
         val navController =
-            (activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+            (activity.supportFragmentManager.findFragmentById(R.id.admin_nav_host_fragment) as NavHostFragment).navController
         activity.addMenuProvider(object : MenuProvider {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -154,21 +155,19 @@ object HelperFunctions {
                     }
 
                     R.id.admin_home_item -> {
-                        navController.popBackStack(R.id.homeFragment, false)
+                        navController.popBackStack(R.id.adminHomeFragment, false)
                         true
                     }
 
                     R.id.log_out -> {
                         activity.lifecycleScope.launch {
-                            biblioHubPreferencesRepository.clearDataStore()
-                            navController.navigate(R.id.loginFragment)
-                            navController.popBackStack()
+                            logout(biblioHubPreferencesRepository, activity)
                         }
                         true
                     }
 
                     R.id.order_item -> {
-                        navController.navigate(R.id.cartFragment)
+                        navController.navigate(R.id.adminOrdersFragment)
                         true
                     }
 
@@ -176,6 +175,17 @@ object HelperFunctions {
                 }
             }
         }, activity, Lifecycle.State.RESUMED)
+    }
+
+    private suspend fun logout(
+        biblioHubPreferencesRepository: BiblioHubPreferencesRepository,
+        activity: FragmentActivity
+    ) {
+        biblioHubPreferencesRepository.clearDataStore()
+        activity.finish()
+        val intent = Intent(activity, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        activity.startActivity(intent)
     }
 
     @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")

@@ -1,20 +1,14 @@
 package com.example.bibliohub.fragments.home
 
-import android.annotation.SuppressLint
-import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
-import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.core.view.MenuProvider
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -25,14 +19,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentHomeBinding
-import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.BaseSearchableFragment
-import com.example.bibliohub.utils.HelperFunctions.setMenu
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.HomeListener {
@@ -56,17 +48,10 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
 
         searchButton = binding.imageButtonStopSearch
         searchText = binding.etSearch
-//        setMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
+
+        setOnBackPressedCallback()
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val home = activity?.findViewById<ActionMenuItemView>(R.id.home_item)
-        home?.setBackgroundColor(resources.getColor(R.color.darkBlue))
-        val cart = activity?.findViewById<ActionMenuItemView>(R.id.cart_item)
-        cart?.setBackgroundColor(resources.getColor(R.color.disabled))
-    }
     override fun initCompulsoryVariables() {
         viewModelFilterText = viewModel.mFilterText
         searchCallback = { it -> viewModel.search(it) }
@@ -82,10 +67,10 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
     }
 
     override fun initRecycler() {
-        viewModel.initOrderDetails {
+        initOrderDetails {
             adapter = HomePagingDataAdapter(requireContext(), this, viewModel.userOrderDetails)
             lifecycleScope.launch {
-                viewModel.products.collectLatest { pagingData ->
+                viewModel.products.observe(viewLifecycleOwner) { pagingData ->
                     // submitData suspends until loading this generation of data stops
                     // so be sure to use collectLatest {} when presenting a Flow<PagingData>
                     if (viewModel.selectedCategory?.isEmpty() == true) {
@@ -100,13 +85,15 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
                                 )
                             })
                     }
-                    adapter.loadStateFlow.map { it.refresh }
-                        .distinctUntilChanged()
-                        .collect {
-                            if (it is LoadState.NotLoading) {
-                                setSearchResult(adapter.itemCount)
+                    lifecycleScope.launch {
+                        adapter.loadStateFlow.map { it.refresh }
+                            .distinctUntilChanged()
+                            .collect {
+                                if (it is LoadState.NotLoading) {
+                                    setSearchResult(adapter.itemCount)
+                                }
                             }
-                        }
+                    }
                 }
             }
             binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -117,6 +104,37 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
         }
     }
 
+    private fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
+        //check if user has existing order details
+        viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
+            Log.d("User", userInfo.toString())
+            if (userInfo != null) {
+                lifecycleScope.launch {
+                    //get current order info else create new order
+                    viewModel.currentOrder =
+                        viewModel.orderRepository.getStaticActiveOrderByUserId(userInfo.id)
+                            ?: viewModel.createNewOrder(
+                                userInfo.id
+                            )
+                    Log.d("Current Order", viewModel.currentOrder.toString())
+                    //check if user already has an order saved and assign to order details list
+                    viewModel.userOrderDetailsLive =
+                        viewModel.orderDetailsRepository.getOrderDetailsByOrderId(
+                            viewModel.currentOrder?.id ?: -1
+                        )
+                    viewModel.userOrderDetailsLive.observe(viewLifecycleOwner) {
+                        Log.d("Order", it.toString())
+                        viewModel.updateOrderDetailsList(it) {
+                            //run callback after order details initialized with check if recycler has
+                            // already ben initialized
+                            onOrderDetailsInitialized()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun setSearchResult(listSize: Int) {
         binding.noOfResultsTextview.visibility =
             View.VISIBLE
@@ -124,8 +142,8 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
         binding.noOfResultsTextview.text = getString(R.string.y_results, size)
     }
 
-    override fun addOrUpdateCart(product: Product, quantity: Int,itemPosition:Int) {
-        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity){
+    override fun addOrUpdateCart(product: Product, quantity: Int, itemPosition: Int) {
+        viewModel.createOrUpdateOrderDetails(product = product, quantity = quantity) {
             adapter.notifyItemChanged(itemPosition)
         }
     }
@@ -194,5 +212,16 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
             requireContext(),
             android.R.layout.simple_dropdown_item_1line, stringArr
         )
+    }
+
+    private fun setOnBackPressedCallback() {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAffinity()
+                    exitProcess(0)
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 }

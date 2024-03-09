@@ -101,8 +101,8 @@ class RegisterFragment : Fragment() {
             val user = withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
             if (user == null) {
                 viewModel.insertUser()
-                viewModel.resetRegisterModel()
                 navigateToLoginScreen()
+                viewModel.resetRegisterModel()
             } else {
                 Toast.makeText(
                     requireContext(),

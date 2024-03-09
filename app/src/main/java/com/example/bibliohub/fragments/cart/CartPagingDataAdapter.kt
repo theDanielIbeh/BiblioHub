@@ -1,6 +1,7 @@
 package com.example.bibliohub.fragments.cart
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -10,14 +11,17 @@ import com.bumptech.glide.Glide
 import com.example.bibliohub.data.entities.orderDetails.OrderDetails
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.CartRecyclerItemBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-object ProductComparator : DiffUtil.ItemCallback<Product>() {
-    override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+object ProductComparator : DiffUtil.ItemCallback<OrderDetails>() {
+    override fun areItemsTheSame(oldItem: OrderDetails, newItem: OrderDetails): Boolean {
         // Id is unique.
-        return oldItem.id == newItem.id
+        return oldItem.productId == newItem.productId
     }
 
-    override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+    override fun areContentsTheSame(oldItem: OrderDetails, newItem: OrderDetails): Boolean {
         return oldItem == newItem
     }
 }
@@ -25,9 +29,8 @@ object ProductComparator : DiffUtil.ItemCallback<Product>() {
 class CartPagingDataAdapter(
     private val context: Context,
     private val listener: CartListener,
-    private val itemsInCart: List<OrderDetails>,
 ) :
-    PagingDataAdapter<Product, CartPagingDataAdapter.CartViewHolder>(ProductComparator) {
+    PagingDataAdapter<OrderDetails, CartPagingDataAdapter.CartViewHolder>(ProductComparator) {
     /**
      * Create new views (invoked by the layout manager)
      */
@@ -52,38 +55,42 @@ class CartPagingDataAdapter(
     // Each data item is just a Product object.
     inner class CartViewHolder(private val binding: CartRecyclerItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product?, position: Int) {
+        fun bind(orderDetails: OrderDetails?, position: Int) {
             fun updateOrderQtyView(orderQty: Int) {
                 binding.quantityEditText.setText(orderQty.toString())
-                if (product != null) {
+                if (orderDetails != null) {
                     listener.addOrUpdateCart(
-                        product,
+                        orderDetails,
                         orderQty
                     )
                 }
             }
             try {
-                if (product == null) {
+                if (orderDetails == null) {
                     return
                 }
-                product.imgSrc?.let {
-                    Glide.with(context).load(it)
-                        .into(binding.memberImageView)
-                }
 
-                //to be used to track order info
-                val userItemInCart = itemsInCart.firstOrNull { it.productId == product.id }
-                //get existing order quantity else assign to 0
-                val orderQuantity = userItemInCart?.quantity ?: 0
+                CoroutineScope(Dispatchers.Main).launch {
+                    val product = listener.getProduct(orderDetails.productId)
+                    product?.imgSrc?.let {
+                        Glide.with(context).load(it)
+                            .into(binding.memberImageView)
+                    }
+                    binding.nameTextView.text = product?.title
+                    binding.authorTextView.text = product?.author
+                    binding.priceTextView.text = product?.price
 
-                //setup cart qty control
-                binding.addBtn.setOnClickListener {
-                    val currentDisplayedQty =
-                        binding.quantityEditText.text.toString().toIntOrNull() ?: 0
-                    if (currentDisplayedQty < product.quantity) {
-                        updateOrderQtyView(currentDisplayedQty + 1)
+                    binding.addBtn.setOnClickListener {
+                        val currentDisplayedQty =
+                            binding.quantityEditText.text.toString().toIntOrNull() ?: 0
+                        Log.d("CurrentQty", currentDisplayedQty.toString())
+                        if (currentDisplayedQty < (product?.quantity?:0)) {
+                            updateOrderQtyView(currentDisplayedQty + 1)
+                        }
                     }
                 }
+
+                //setup cart qty control
                 binding.subtractBtn.setOnClickListener {
                     // to make sure order qty doesn't go below 0
                     val currentDisplayedQty =
@@ -93,15 +100,11 @@ class CartPagingDataAdapter(
                     }
                     updateOrderQtyView(currentDisplayedQty - 1)
                 }
-                binding.nameTextView.text = product.title
-                binding.authorTextView.text = product.author
-                binding.priceTextView.text = product.price
                 //make sure order quantity view has item to display
-                updateOrderQtyView(orderQuantity)
-
+                updateOrderQtyView(orderDetails.quantity)
 
                 binding.deleteFromCartButton.setOnClickListener {
-                    listener.deleteFromCart(product.id)
+                    orderDetails.productId.let { it1 -> listener.deleteFromCart(it1) }
                     notifyItemChanged(position)
                 }
             } catch (e: Exception) {
@@ -111,7 +114,8 @@ class CartPagingDataAdapter(
     }
 
     interface CartListener {
-        fun addOrUpdateCart(product: Product, quantity: Int)
+        suspend fun getProduct(productId: Int): Product?
+        fun addOrUpdateCart(orderDetails: OrderDetails, quantity: Int)
         fun deleteFromCart(productId: Int)
     }
 }

@@ -2,6 +2,7 @@ package com.example.bibliohub.data.entities.product
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -10,6 +11,12 @@ import androidx.room.Query
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(product: Product)
+
+    @Delete
+    suspend fun delete(product: Product)
+
+    @Query("SELECT * FROM product WHERE id = :productId")
+    suspend fun getProductById(productId: Int): Product?
 
     @Query("SELECT * FROM product WHERE quantity > 0 AND title LIKE :filterText")
     fun getAvailableProducts(filterText: String?): PagingSource<Int, Product>

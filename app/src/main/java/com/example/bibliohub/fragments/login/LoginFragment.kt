@@ -1,5 +1,6 @@
 package com.example.bibliohub.fragments.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.bibliohub.AdminActivity
+import com.example.bibliohub.CustomerActivity
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentLoginBinding
 import com.example.bibliohub.utils.FormFunctions.validateLoginEmail
@@ -94,16 +97,17 @@ class LoginFragment : Fragment() {
             ) {
                 viewModel.saveAdminPreferences()
 //                setAdminMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
-                findNavController().navigate(R.id.adminHomeFragment)
+                val intent = Intent(requireContext(), AdminActivity::class.java)
+                startActivity(intent)
             } else {
                 val user =
                     withContext(Dispatchers.IO) { viewModel.getUserDetails(email = email) }
                 if (user != null) {
                     if (user.password == password) {
-                        viewModel.resetLoginModel()
                         viewModel.savePreferences(user)
-//                        setMenu(requireActivity(), viewModel.biblioHubPreferencesRepository)
-                        findNavController().navigate(R.id.homeFragment)
+                        val intent = Intent(requireContext(), CustomerActivity::class.java)
+                        startActivity(intent)
+                        viewModel.resetLoginModel()
                     } else {
                         binding.passwordLayout.error = "Incorrect password"
                     }
