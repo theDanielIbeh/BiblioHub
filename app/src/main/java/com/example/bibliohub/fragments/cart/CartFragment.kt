@@ -69,13 +69,13 @@ class CartFragment : Fragment(), CartPagingDataAdapter.CartListener {
 
                     viewModel.currentOrder?.id?.let {
                         viewModel.orderDetailsRepository.getOrderDetailsByOrderId(it)
-                            .observe(viewLifecycleOwner) {
-                                if (viewModel.orderDetails != it) {
-                                    viewModel.orderDetails = it
-                                    viewModel.orderSum = it.sumOf { orderDetails ->
+                            .observe(viewLifecycleOwner) {allOrderDetails ->
+                                if (viewModel.orderDetails != allOrderDetails) {
+                                    viewModel.orderDetails = allOrderDetails
+                                    viewModel.updateOrderSum(allOrderDetails.sumOf { orderDetails ->
                                         ((orderDetails.price.toDoubleOrNull()
                                             ?: 0.0) * orderDetails.quantity)
-                                    }
+                                    })
                                     Log.d("OrderSum", viewModel.orderSum.toString())
                                 }
                             }

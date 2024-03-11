@@ -5,6 +5,7 @@
     tools:context=".fragments.productDetails.ProductDetailsFragment">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.bibliohub.fragments.productDetails.ProductDetailsViewModel" />
@@ -32,16 +33,16 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/memberImageView"
+                    android:id="@+id/productImageView"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:src="@drawable/no_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/no_image" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/name_text_view"
@@ -50,13 +51,13 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.product.title}"
                     android:textAlignment="textStart"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/memberImageView"
-                    android:text="@{viewModel.product.title}"/>
+                    app:layout_constraintTop_toBottomOf="@+id/productImageView" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/author_text_view"
@@ -65,11 +66,11 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.product.author}"
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/name_text_view"
-                    android:text="@{viewModel.product.author}" />
+                    app:layout_constraintTop_toBottomOf="@+id/name_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/description_title_text_view"
@@ -93,11 +94,11 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.product.description}"
                     android:textAlignment="textStart"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/description_title_text_view"
-                    android:text="@{viewModel.product.description}" />
+                    app:layout_constraintTop_toBottomOf="@+id/description_title_text_view" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -107,13 +108,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:text="@={viewModel.product.price}"
             android:textAlignment="center"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/add_to_cart_button"
             app:layout_constraintEnd_toStartOf="@+id/subtract_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/content_scroll_view"
-            android:text="@{viewModel.product.price}" />
+            app:layout_constraintTop_toBottomOf="@id/content_scroll_view" />
 
         <ImageView
             android:id="@+id/subtract_btn"

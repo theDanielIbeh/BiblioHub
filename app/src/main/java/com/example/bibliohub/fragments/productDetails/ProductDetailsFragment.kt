@@ -1,6 +1,7 @@
 package com.example.bibliohub.fragments.productDetails
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentProductDetailsBinding
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ProductDetailsFragment : Fragment() {
@@ -31,16 +30,22 @@ class ProductDetailsFragment : Fragment() {
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         viewModel.product = args.product
-
-        viewModel.product.imgSrc?.let {
-            Glide.with(requireContext()).load(it)
-                .into(binding.memberImageView)
+        Log.d("Details", viewModel.product.toString())
+        viewModel.product.let { product ->
+            product.imgSrc?.let {
+                loadImage(it)
+            }
         }
 
         initializeOrderDetails()
         return binding.root
     }
+
+    private fun loadImage(imgSrc: String) =
+        Glide.with(requireContext()).load(imgSrc)
+            .into(binding.productImageView)
 
     private fun initializeOrderDetails() {
         initOrderDetails {
@@ -116,31 +121,31 @@ class ProductDetailsFragment : Fragment() {
     }
 
     private fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
-            //check if user has existing order details
-            viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
-                if (userInfo != null) {
-                    lifecycleScope.launch {
-                        //get current order info else create new order
-                        viewModel.currentOrder =
-                            userInfo.id.let {
-                                viewModel.orderRepository.getStaticActiveOrderByUserId(
-                                    it
-                                )
-                            }
-                                ?: viewModel.createNewOrder(
-                                    userInfo.id
-                                )
+        //check if user has existing order details
+        viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
+            if (userInfo != null) {
+                lifecycleScope.launch {
+                    //get current order info else create new order
+                    viewModel.currentOrder =
+                        userInfo.id.let {
+                            viewModel.orderRepository.getStaticActiveOrderByUserId(
+                                it
+                            )
+                        }
+                            ?: viewModel.createNewOrder(
+                                userInfo.id
+                            )
 
-                        //check if user already has an order saved and assign to order details list
-                        viewModel.orderDetailsRepository.getOrderDetailsByOrderId(viewModel.currentOrder.id)
-                            .observe(viewLifecycleOwner) {
-                                //clear list in the event list is holding other objects
-                                viewModel.userOrderDetails = it
-                                //run callback after order details initialized
-                                onOrderDetailsInitialized()
-                            }
-                    }
+                    //check if user already has an order saved and assign to order details list
+                    viewModel.orderDetailsRepository.getOrderDetailsByOrderId(viewModel.currentOrder.id)
+                        .observe(viewLifecycleOwner) {
+                            //clear list in the event list is holding other objects
+                            viewModel.userOrderDetails = it
+                            //run callback after order details initialized
+                            onOrderDetailsInitialized()
+                        }
                 }
+            }
         }
     }
 

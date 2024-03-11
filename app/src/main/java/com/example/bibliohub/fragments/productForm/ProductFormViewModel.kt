@@ -68,7 +68,7 @@ class ProductFormViewModel(
         )
     }
 
-    fun productToProductModel(product: Product): ProductModel {
+    private fun productToProductModel(product: Product): ProductModel {
         val sdf = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
         val date = product.pubDate?.let { sdf.parse(it) }
         val dateStr = date?.let { HelperFunctions.getDateString(Constants.DATE_FORMAT_FULL, it) }

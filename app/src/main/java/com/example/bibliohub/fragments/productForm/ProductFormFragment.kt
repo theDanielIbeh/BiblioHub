@@ -67,8 +67,11 @@ class ProductFormFragment : Fragment() {
 
         viewModel.product = args.product
         viewModel.product?.let { product ->
-            viewModel.productToProductModel(product)
-            product.imgSrc?.let { loadImage(it) }
+            viewModel.initializeProductModel(product)
+            product.imgSrc?.let {
+                loadImage(it)
+                binding.isImageAvailable = true
+            }
         }
         setBinding()
         setOnBackPressedCallback()

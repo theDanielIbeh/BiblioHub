@@ -1,6 +1,8 @@
 package com.example.bibliohub.fragments.cart
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,8 +19,8 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+
 
 class CartViewModel(
     val orderRepository: OrderRepository,
@@ -31,7 +33,7 @@ class CartViewModel(
     //Variables to hold order information
     var currentOrder: Order? = null
     var orderDetails: List<OrderDetails>? = null
-    var orderSum: Double? = null
+    var orderSum = ObservableField<String>()
 
     init {
         loggedInUser =
@@ -74,6 +76,10 @@ class CartViewModel(
         viewModelScope.launch {
             currentOrder?.id?.let { orderDetailsRepository.deleteOrderDetails(it, productId) }
         }
+    }
+
+    fun updateOrderSum(value: Double) {
+        orderSum.set(value.toString())
     }
 
     internal fun getOrderDetailsByIds(orderId: Int): LiveData<PagingData<OrderDetails>> =
