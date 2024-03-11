@@ -1,10 +1,12 @@
 package com.example.bibliohub.fragments.checkout
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.bibliohub.MainActivity
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentAlertModalBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -37,6 +39,10 @@ class AlertModalFragment : BottomSheetDialogFragment() {
      * Navigates to the Home screen.
      */
     private fun navigateToHome() {
-        findNavController().popBackStack(R.id.homeFragment, true)
+//        findNavController().popBackStack(R.id.homeFragment, true)
+        requireActivity().finish()
+        val intent = Intent(activity, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        requireActivity().startActivity(intent)
     }
 }

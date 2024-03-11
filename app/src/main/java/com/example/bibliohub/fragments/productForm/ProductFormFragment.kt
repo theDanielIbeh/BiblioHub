@@ -22,19 +22,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.content.FileProvider
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.bibliohub.R
+import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.databinding.FragmentProductFormBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.FormFunctions
 import com.example.bibliohub.utils.HelperFunctions.displayDatePicker
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -67,6 +71,7 @@ class ProductFormFragment : Fragment() {
             product.imgSrc?.let { loadImage(it) }
         }
         setBinding()
+        setOnBackPressedCallback()
         return binding.root
     }
 
@@ -80,19 +85,19 @@ class ProductFormFragment : Fragment() {
                 FormFunctions.validateName(it.toString(), binding.titleLayout)
             }
             authorEditText.doAfterTextChanged {
-                FormFunctions.validatePostcode(it.toString(), binding.authorLayout)
+                FormFunctions.validateName(it.toString(), binding.authorLayout)
             }
             descriptionEditText.doAfterTextChanged {
-                FormFunctions.validateEmail(it.toString(), binding.descriptionLayout)
+                FormFunctions.validateName(it.toString(), binding.descriptionLayout)
             }
             isbnEditText.doAfterTextChanged {
-                FormFunctions.validateExpiryDate(it.toString(), binding.isbnLayout)
+                FormFunctions.validateISBN(it.toString(), binding.isbnLayout)
             }
             quantityEditText.doAfterTextChanged {
-                FormFunctions.validateCVV(it.toString(), binding.quantityLayout)
+                FormFunctions.validateNumber(it.toString(), binding.quantityLayout)
             }
             imageEditText.doAfterTextChanged {
-                FormFunctions.validatePIN(it.toString(), binding.imageLayout)
+                FormFunctions.validateGeneral(it.toString(), binding.imageLayout)
             }
             btnDelete.setOnClickListener {
                 binding.isImageAvailable = false
@@ -100,13 +105,13 @@ class ProductFormFragment : Fragment() {
                 viewModel?.productModel?.value?.imgSrc = null
             }
             pubDateEditText.doAfterTextChanged {
-                FormFunctions.validatePIN(it.toString(), binding.pubDateLayout)
+                FormFunctions.validateGeneral(it.toString(), binding.pubDateLayout)
             }
             priceEditText.doAfterTextChanged {
-                FormFunctions.validatePIN(it.toString(), binding.priceLayout)
+                FormFunctions.validateGeneral(it.toString(), binding.priceLayout)
             }
             categoryEditText.doAfterTextChanged {
-                FormFunctions.validatePIN(it.toString(), binding.categoryLayout)
+                FormFunctions.validateGeneral(it.toString(), binding.categoryLayout)
             }
             imageEditText.setOnClickListener {
                 takePhotoOrSelectFile()
@@ -117,7 +122,15 @@ class ProductFormFragment : Fragment() {
                     requireContext()
                 )
             }
-
+            categoryEditText.setAdapter(
+                viewModel?.categoryList?.let {
+                    ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_list_item_1,
+                        it
+                    )
+                }
+            )
             categoryEditText.setOnEditorActionListener { _, actionId, event ->
                 if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                     btnSubmit.performClick()
@@ -148,13 +161,23 @@ class ProductFormFragment : Fragment() {
                     category = category
                 )
                 if (isFormValid) {
-                    viewModel?.productModel?.value?.let { product ->
+                    viewModel?.product = viewModel?.productModel?.value?.let { product ->
                         viewModel?.productModelToProduct(
-                            product, currentFilePath)
+                            product, currentFilePath
+                        )
                     }
-
-                    findNavController().popBackStack(R.id.adminHomeFragment, true)
-                    viewModel?.resetProductModel()
+                    lifecycleScope.launch {
+                        viewModel?.product?.let { it1 -> viewModel?.insertProduct(it1) }
+                        if (currentFilePath != null) {
+                            viewModel?.loggedInUser?.observe(viewLifecycleOwner) { userInfo ->
+                                lifecycleScope.launch {
+                                    renameFile(userInfo)
+                                }
+                            }
+                        }
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        viewModel?.resetProductModel()
+                    }
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -164,6 +187,25 @@ class ProductFormFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private suspend fun renameFile(userInfo: User?) {
+        val newProduct = userInfo?.id?.let { id ->
+            viewModel.getProductByUserIdAndImageSrc(
+                userId = id,
+                imgSrc = currentFilePath!!
+            )
+        }
+        val newFile = File(
+            storageDir,
+            "${newProduct?.id}.jpg",
+        )
+        currentFilePath?.let { oldPath ->
+            File(oldPath).renameTo(newFile)
+            File(oldPath).delete()
+        }
+        viewModel.product?.imgSrc = newFile.absolutePath
+        viewModel.product?.let { product -> viewModel.update(product = product) }
     }
 
     private fun validateFields(
@@ -182,12 +224,12 @@ class ProductFormFragment : Fragment() {
         val isDescriptionValid = FormFunctions.validateName(description, binding.descriptionLayout)
         val isISBNValid = FormFunctions.validateISBN(isbn, binding.isbnLayout)
         val isQuantityValid = FormFunctions.validateNumber(quantity, binding.quantityLayout)
-        val isImgValid = FormFunctions.validateGeneral(imgSrc, binding.imageLayout)
+//        val isImgValid = FormFunctions.validateGeneral(imgSrc, binding.imageLayout)
         val isPubDateValid = FormFunctions.validateGeneral(pubDate, binding.pubDateLayout)
         val isPriceValid = FormFunctions.validateGeneral(price, binding.priceLayout)
         val isCategoryValid = FormFunctions.validateGeneral(category, binding.categoryLayout)
 
-        return isNameValid && isAuthorValid && isDescriptionValid && isISBNValid && isQuantityValid && isImgValid && isPubDateValid && isPriceValid && isCategoryValid
+        return isNameValid && isAuthorValid && isDescriptionValid && isISBNValid && isQuantityValid && isPubDateValid && isPriceValid && isCategoryValid
     }
 
     // Function for displaying an AlertDialog for choosing an image/pdf file
@@ -262,7 +304,7 @@ class ProductFormFragment : Fragment() {
             context.getExternalFilesDir("${Environment.DIRECTORY_DOCUMENTS}/${Constants.PRODUCT_PICTURE_DIR}")
         return File(
             storageDir,
-            ".jpg",
+            "dummy.jpg",
         ).apply {
             currentFilePath = absolutePath
         }
@@ -495,5 +537,15 @@ class ProductFormFragment : Fragment() {
             inSampleSize++
         }
         return inSampleSize
+    }
+
+    private fun setOnBackPressedCallback() {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack(R.id.adminHomeFragment, true)
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 }

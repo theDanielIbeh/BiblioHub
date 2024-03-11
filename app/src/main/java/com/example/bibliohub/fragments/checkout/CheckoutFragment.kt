@@ -32,7 +32,6 @@ class CheckoutFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-
         //check if user has existing order details
         viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
             //get current order info else create new order
@@ -91,7 +90,7 @@ class CheckoutFragment : Fragment() {
                     pin = pin
                 )
                 if (isFormValid) {
-                    completePayment()
+                    completePayment(address, postcode)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -103,8 +102,10 @@ class CheckoutFragment : Fragment() {
         }
     }
 
-    private fun completePayment() {
+    private fun completePayment(address: String, postcode: String) {
         lifecycleScope.launch {
+            viewModel.currentOrder?.address = address
+            viewModel.currentOrder?.postcode = postcode
             viewModel.updateOrderStatus(Constants.Status.COMPLETED)
             viewModel.resetCheckoutModel()
             alertModalFragment.show(requireActivity().supportFragmentManager, "AlertModalFragment")

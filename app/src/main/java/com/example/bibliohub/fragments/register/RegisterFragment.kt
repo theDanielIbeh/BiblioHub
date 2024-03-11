@@ -35,6 +35,7 @@ class RegisterFragment : Fragment() {
         binding.viewModel = viewModel
 
         with(binding) {
+            firstNameEditText.requestFocus()
             firstNameEditText.doAfterTextChanged {
                 FormFunctions.validateName(it.toString(), binding.firstNameLayout)
             }
@@ -86,10 +87,9 @@ class RegisterFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-                existingUserAction.setOnClickListener {
-                    navigateToLoginScreen()
-                }
+            }
+            existingUserAction.setOnClickListener {
+                navigateToLoginScreen()
             }
         }
 

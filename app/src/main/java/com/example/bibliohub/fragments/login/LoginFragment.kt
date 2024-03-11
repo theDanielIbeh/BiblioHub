@@ -44,6 +44,7 @@ class LoginFragment : Fragment() {
         binding.viewModel = viewModel
 
         with(binding) {
+            usernameEditText.requestFocus()
             usernameEditText.doAfterTextChanged {
                 validateLoginEmail(it.toString(), binding.usernameLayout)
             }

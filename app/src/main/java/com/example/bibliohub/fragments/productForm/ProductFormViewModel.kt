@@ -1,12 +1,16 @@
 package com.example.bibliohub.fragments.productForm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bibliohub.BiblioHubApplication
+import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.data.entities.order.OrderRepository
 import com.example.bibliohub.data.entities.product.Product
+import com.example.bibliohub.data.entities.product.ProductRepository
+import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
@@ -31,11 +35,16 @@ data class ProductModel(
 
 class ProductFormViewModel(
     private val userRepository: UserRepository,
-    private val orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val productRepository: ProductRepository,
+    val biblioHubPreferencesRepository: BiblioHubPreferencesRepository
 ) : ViewModel() {
     private var _productModel: MutableStateFlow<ProductModel> = MutableStateFlow(ProductModel())
     val productModel: StateFlow<ProductModel> = _productModel.asStateFlow()
     var product: Product? = null
+    var loggedInUser: LiveData<User?> =
+        biblioHubPreferencesRepository.getPreference(User::class.java, Constants.USER)
+    val categoryList = listOf("Fiction", "Non-Fiction")
 
     fun resetProductModel() {
         _productModel.value = ProductModel()
@@ -80,6 +89,17 @@ class ProductFormViewModel(
         _productModel.value = productToProductModel(product)
     }
 
+    suspend fun insertProduct(product: Product) {
+        productRepository.insert(product = product)
+    }
+
+    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product? =
+        productRepository.getProductByUserIdAndImageSrc(userId = userId, imgSrc = imgSrc)
+
+    suspend fun update(product: Product) {
+        productRepository.update(product = product)
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -87,9 +107,13 @@ class ProductFormViewModel(
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
                 val userRepository = application.container.userRepository
                 val orderRepository = application.container.orderRepository
+                val productRepository = application.container.productRepository
+                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
                 ProductFormViewModel(
                     userRepository = userRepository,
-                    orderRepository = orderRepository
+                    orderRepository = orderRepository,
+                    productRepository = productRepository,
+                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
                 )
             }
         }

@@ -6,12 +6,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.bibliohub.utils.Constants
 
 @Dao
 interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(order: Order)
+
+    @Update
+    suspend fun update(order: Order)
 
     @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
     fun getActiveOrderByUserId(userId: Int): Order?

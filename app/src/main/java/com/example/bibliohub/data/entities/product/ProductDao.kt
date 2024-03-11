@@ -6,11 +6,15 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(product: Product)
+
+    @Update
+    suspend fun update(product: Product)
 
     @Delete
     suspend fun delete(product: Product)
@@ -28,4 +32,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM product WHERE title LIKE :filterText")
     fun getAllProducts(filterText: String?): PagingSource<Int, Product>
+
+    @Query("SELECT * FROM product WHERE id = :userId AND img_src = :imgSrc")
+    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product?
 }

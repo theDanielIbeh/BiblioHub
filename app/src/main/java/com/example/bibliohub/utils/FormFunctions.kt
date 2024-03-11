@@ -153,7 +153,7 @@ object FormFunctions {
 
     fun validateISBN(value: String, layout: TextInputLayout): Boolean {
         val pattern =
-            "^(?:ISBN(?:-1[03])?:? )?(?=[ 0-9X]{10}\$|(?=(?:[ 0-9]+[-●]){3})[-●0-9X]{13}\$)[0-9X]{1,5}[-● ][0-9X]+[-● ][0-9X]+[-● ][0-9X]\$\n"
+            "^(?:ISBN(?:-1([03]))?:?)?((?:[ 0-9X]{1,5})[- ]?){3}([ 0-9X])\$"
         var isValid = false
         if (value.isBlank()) {
             val errorText = "This field is required"

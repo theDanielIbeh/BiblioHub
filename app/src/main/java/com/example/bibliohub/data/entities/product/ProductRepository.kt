@@ -8,13 +8,14 @@ import androidx.paging.liveData
 
 interface ProductRepository {
     suspend fun insert(product: Product)
+    suspend fun update(product: Product)
     suspend fun delete(product: Product)
-
     suspend fun getProductById(productId: Int): Product?
     fun getAvailableProducts(pageSize: Int, filterText: String?): LiveData<PagingData<Product>>
     fun getProductsByIDs(pageSize: Int, productIDs: List<Int>): LiveData<PagingData<Product>>
     fun getProductsInCart(pageSize: Int, cartIds: List<Int>): LiveData<PagingData<Product>>
     fun getAllProducts(pageSize: Int, filterText: String?): LiveData<PagingData<Product>>
+    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product?
 }
 
 class OfflineProductRepository(
@@ -22,6 +23,10 @@ class OfflineProductRepository(
 ) : ProductRepository {
     override suspend fun insert(product: Product) {
         productDao.insert(product = product)
+    }
+
+    override suspend fun update(product: Product) {
+        productDao.update(product = product)
     }
 
     override suspend fun delete(product: Product) {
@@ -67,4 +72,7 @@ class OfflineProductRepository(
             productDao.getAllProducts(filterText)
         }
     ).liveData
+
+    override suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product? =
+        productDao.getProductByUserIdAndImageSrc(userId = userId, imgSrc = imgSrc)
 }

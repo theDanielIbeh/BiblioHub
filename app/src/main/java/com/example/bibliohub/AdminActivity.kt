@@ -25,7 +25,7 @@ class AdminActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.admin_nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment?.navController?.navInflater
         val navGraph = inflater?.inflate(R.navigation.admin_nav_graph)
-        navGraph?.setStartDestination(startDestId = R.id.homeFragment)
+        navGraph?.setStartDestination(startDestId = R.id.adminHomeFragment)
 
         HelperFunctions.setAdminMenu(
             this,

@@ -9,7 +9,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
-import com.example.bibliohub.utils.HelperFunctions
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }

@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/instruction" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn"
+            android:id="@+id/checkout_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkout"
@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn"
+            app:layout_constraintTop_toBottomOf="@+id/checkout_btn"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:listitem="@layout/home_recycler_item" />

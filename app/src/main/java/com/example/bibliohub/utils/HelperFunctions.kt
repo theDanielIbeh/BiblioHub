@@ -66,6 +66,9 @@ object HelperFunctions {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
+                menu.findItem(R.id.home_item)?.setChecked(true)
+//                val home = activity.findViewById<ActionMenuItemView>(R.id.home_item)
+//                home.setBackgroundColor(activity.resources.getColor(R.color.darkBlue))
             }
 
             override fun onPrepareMenu(menu: Menu) {
@@ -79,6 +82,7 @@ object HelperFunctions {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 // Handle the menu selection
+                menuItem.setChecked(true)
                 resetMenuItemColors(activity, menuItem.itemId)
                 Log.d("MainActivity", menuItem.itemId.toString())
                 return when (menuItem.itemId) {
@@ -134,6 +138,9 @@ object HelperFunctions {
             @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
+                menu.findItem(R.id.admin_home_item)?.setChecked(true)
+//                val adminHome = activity.findViewById<ActionMenuItemView>(R.id.admin_home_item)
+//                adminHome.setBackgroundColor(activity.resources.getColor(R.color.darkBlue))
             }
 
             override fun onPrepareMenu(menu: Menu) {
@@ -146,6 +153,7 @@ object HelperFunctions {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 // Handle the menu selection
+                menuItem.setChecked(true)
                 resetAdminMenuItemColors(activity, menuItem.itemId)
                 Log.d("MainActivity", menuItem.itemId.toString())
                 return when (menuItem.itemId) {
@@ -177,17 +185,6 @@ object HelperFunctions {
         }, activity, Lifecycle.State.RESUMED)
     }
 
-    private suspend fun logout(
-        biblioHubPreferencesRepository: BiblioHubPreferencesRepository,
-        activity: FragmentActivity
-    ) {
-        biblioHubPreferencesRepository.clearDataStore()
-        activity.finish()
-        val intent = Intent(activity, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        activity.startActivity(intent)
-    }
-
     @SuppressLint("RestrictedApi", "UseCompatLoadingForDrawables")
     private fun resetAdminMenuItemColors(activity: FragmentActivity, selectedId: Int) {
         val adminHome = activity.findViewById<ActionMenuItemView>(R.id.admin_home_item)
@@ -199,6 +196,17 @@ object HelperFunctions {
             adminHome.setBackgroundColor(activity.resources.getColor(R.color.disabled))
             order.setBackgroundColor(activity.resources.getColor(R.color.darkBlue))
         }
+    }
+
+    private suspend fun logout(
+        biblioHubPreferencesRepository: BiblioHubPreferencesRepository,
+        activity: FragmentActivity
+    ) {
+        biblioHubPreferencesRepository.clearDataStore()
+        activity.finish()
+        val intent = Intent(activity, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        activity.startActivity(intent)
     }
 
     fun displayDatePicker(

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.bibliohub.data.entities.orderDetails.OrderDetails
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.AdminOrderDetailsRecyclerItemBinding
@@ -67,6 +68,10 @@ class AdminOrderDetailsPagingDataAdapter(
                         withContext(Dispatchers.IO) { listener.getProduct(productId = orderDetails.productId) }
 
                     with(binding) {
+                        product?.imgSrc.let {
+                            Glide.with(context).load(it)
+                                .into(memberImageView)
+                        }
                         nameTextView.text = product?.title
                         authorTextView.text = product?.author
                     }

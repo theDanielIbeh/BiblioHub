@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +34,8 @@ class CartFragment : Fragment(), CartPagingDataAdapter.CartListener {
         binding.viewModel = viewModel
 
         initRecycler()
+
+        binding.checkoutBtn.setOnClickListener { findNavController().navigate(CartFragmentDirections.actionCartFragmentToCheckoutFragment()) }
 
         return binding.root
     }

@@ -31,7 +31,7 @@
                     app:contentPaddingTop="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_launcher_background" />
+                    android:src="@drawable/no_image" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/name_text_view"

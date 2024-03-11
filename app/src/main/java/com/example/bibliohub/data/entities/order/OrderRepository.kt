@@ -11,6 +11,7 @@ import com.example.bibliohub.utils.Constants
 
 interface OrderRepository {
     suspend fun insert(order: Order)
+    suspend fun update(order: Order)
     suspend fun getActiveOrderByUserId(userId: Int): Order?
     suspend fun getStaticActiveOrderByUserId(userId: Int): Order?
     suspend fun updateOrderStatus(orderId: Int, status: Constants.Status)
@@ -22,6 +23,10 @@ class OfflineOrderRepository(
 ) : OrderRepository {
     override suspend fun insert(order: Order) {
         orderDao.insert(order = order)
+    }
+
+    override suspend fun update(order: Order) {
+        orderDao.update(order = order)
     }
 
     override suspend fun getActiveOrderByUserId(userId: Int): Order? =

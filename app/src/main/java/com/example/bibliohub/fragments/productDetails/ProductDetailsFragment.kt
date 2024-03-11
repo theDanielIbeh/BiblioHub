@@ -115,8 +115,7 @@ class ProductDetailsFragment : Fragment() {
         }
     }
 
-    fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
-
+    private fun initOrderDetails(onOrderDetailsInitialized: () -> Unit) {
             //check if user has existing order details
             viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
                 if (userInfo != null) {

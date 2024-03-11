@@ -56,8 +56,10 @@ class AdminHomePagingDataAdapter(
                     return
                 }
 
-                Glide.with(context).load(product.imgSrc)
-                    .into(binding.memberImageView)
+                product.imgSrc?.let {
+                    Glide.with(context).load(it)
+                        .into(binding.memberImageView)
+                }
                 //setup cart qty control
                 binding.editProductButton.setOnClickListener {
                     listener.editProduct(product = product)
