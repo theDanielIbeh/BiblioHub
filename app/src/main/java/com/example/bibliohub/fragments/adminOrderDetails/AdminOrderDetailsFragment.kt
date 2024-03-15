@@ -70,7 +70,7 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
                         viewModel?.order?.apply {
                             status = Constants.Status.REJECTED
                             val formatter = SimpleDateFormat(
-                                Constants.DATE_FORMAT_HYPHEN_DMY,
+                                Constants.DATE_FORMAT_SPREAD,
                                 Locale.getDefault()
                             )
                             val currentDate = Date()
@@ -86,7 +86,7 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
                         viewModel?.order?.apply {
                             status = Constants.Status.APPROVED
                             val formatter = SimpleDateFormat(
-                                Constants.DATE_FORMAT_HYPHEN_DMY,
+                                Constants.DATE_FORMAT_SPREAD,
                                 Locale.getDefault()
                             )
                             val currentDate = Date()

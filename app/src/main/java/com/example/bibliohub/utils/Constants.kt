@@ -10,8 +10,10 @@ object Constants {
     const val NO_MEDIA_FILE = ".nomedia"
     const val PRODUCT_PICTURE_DIR = "Products"
 
+    /** Date constants */
     const val DATE_FORMAT_FULL = "MMMM d, yyyy" // e.g May 24, 2022
     const val DATE_FORMAT_HYPHEN_DMY = "dd-MM-yyyy" // 10-01-2022
+    const val DATE_FORMAT_SPREAD = "yyyy-MM-dd HH:mm:ss" // e.g 2021-01-05 15:00:00
 
     enum class Status {
         PENDING,

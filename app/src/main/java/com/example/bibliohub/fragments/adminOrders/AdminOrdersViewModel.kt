@@ -36,7 +36,7 @@ class AdminOrdersViewModel(
     suspend fun getUser(userId: Int): User? = userRepository.getUserById(userId = userId)
     suspend fun updateOrder(order: Order, status: Constants.Status) {
         order.status = status
-        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
+        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_SPREAD, Locale.getDefault())
         val currentDate = Date()
         order.date = formatter.format(currentDate)
         orderRepository.update(order = order)
