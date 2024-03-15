@@ -4,19 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentAdminProductDetailsBinding
-import com.example.bibliohub.databinding.FragmentProductDetailsBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
