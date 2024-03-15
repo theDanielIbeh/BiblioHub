@@ -2,6 +2,7 @@ package com.example.bibliohub
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
+import com.example.bibliohub.utils.HelperFunctions.createMediaDirectory
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val navGraph = inflater.inflate(R.navigation.nav_graph)
+
+        createDirs()
 
         val isLoggedIn = viewModel.biblioHubPreferencesRepository.getPreference(
             Boolean::class.java,
@@ -46,6 +50,21 @@ class MainActivity : AppCompatActivity() {
             }
             val navController = navHostFragment.navController
             navController.setGraph(navGraph, intent.extras)
+        }
+    }
+
+    /**
+     * Create image directory if it does not exist
+     */
+    private fun createDirs() {
+        try {
+            createMediaDirectory(
+                this,
+                Constants.PRODUCT_PICTURE_DIR,
+                Environment.DIRECTORY_PICTURES
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
