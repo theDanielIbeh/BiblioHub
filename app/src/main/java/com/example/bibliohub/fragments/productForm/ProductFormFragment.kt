@@ -164,13 +164,19 @@ class ProductFormFragment : Fragment() {
                     category = category
                 )
                 if (isFormValid) {
-                    viewModel?.product = viewModel?.productModel?.value?.let { product ->
+                    viewModel?.productModel?.value?.let { product ->
                         viewModel?.productModelToProduct(
                             product, currentFilePath
                         )
                     }
                     lifecycleScope.launch {
-                        viewModel?.product?.let { it1 -> viewModel?.insertProduct(it1) }
+                        viewModel?.product?.let { it1 ->
+                            if (args.product == null) {
+                                viewModel?.insertProduct(it1)
+                            } else {
+                                viewModel?.updateProduct(it1)
+                            }
+                        }
                         if (currentFilePath != null) {
                             viewModel?.loggedInUser?.observe(viewLifecycleOwner) { userInfo ->
                                 lifecycleScope.launch {

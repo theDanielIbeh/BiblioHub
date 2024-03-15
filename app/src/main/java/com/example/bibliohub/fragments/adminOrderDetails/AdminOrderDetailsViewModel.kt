@@ -18,15 +18,21 @@ import com.example.bibliohub.data.entities.orderDetails.OrderDetailsRepository
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
+import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import kotlinx.coroutines.launch
 
 class AdminOrderDetailsViewModel(
+    val userRepository: UserRepository,
     val orderRepository: OrderRepository,
     val orderDetailsRepository: OrderDetailsRepository,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
+    lateinit var user: User
     lateinit var order: Order
+    lateinit var name: String
+    var total: String? = null
+    lateinit var status: String
 
 
     internal val orderDetails: LiveData<PagingData<OrderDetails>> =
@@ -36,8 +42,12 @@ class AdminOrderDetailsViewModel(
 
     suspend fun getProductById(productId: Int): Product? = productRepository.getProductById(productId = productId)
 
-    suspend fun changeOrderStatus(orderId: Int, status: Constants.Status) =
-        orderRepository.updateOrderStatus(orderId = orderId, status = status)
+    suspend fun updateOrder() {
+        orderRepository.update(order = order)
+    }
+
+    suspend fun getUserById() =
+        userRepository.getUserById(userId = order.customerId)
 
 
     companion object {
@@ -45,11 +55,13 @@ class AdminOrderDetailsViewModel(
             initializer {
                 val application =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
+                val userRepository = application.container.userRepository
                 val productRepository = application.container.productRepository
                 val orderRepository = application.container.orderRepository
                 val orderDetailsRepository = application.container.orderDetailsRepository
                 val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
                 AdminOrderDetailsViewModel(
+                    userRepository = userRepository,
                     orderRepository = orderRepository,
                     orderDetailsRepository = orderDetailsRepository,
                     productRepository = productRepository,

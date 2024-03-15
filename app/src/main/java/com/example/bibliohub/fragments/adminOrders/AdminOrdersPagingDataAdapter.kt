@@ -92,8 +92,8 @@ class AdminOrdersPagingDataAdapter(
                     approveProductButton.setOnClickListener {
                         CoroutineScope(Dispatchers.Main).launch {
                             withContext(Dispatchers.IO) {
-                                listener.changeOrderStatus(
-                                    orderId = order.id,
+                                listener.updateOrder(
+                                    order = order,
                                     status = Constants.Status.APPROVED
                                 )
                             }
@@ -102,8 +102,8 @@ class AdminOrdersPagingDataAdapter(
                     rejectProductButton.setOnClickListener {
                         CoroutineScope(Dispatchers.Main).launch {
                             withContext(Dispatchers.IO) {
-                                listener.changeOrderStatus(
-                                    orderId = order.id,
+                                listener.updateOrder(
+                                    order = order,
                                     status = Constants.Status.REJECTED
                                 )
                             }
@@ -121,7 +121,7 @@ class AdminOrdersPagingDataAdapter(
     interface HomeListener {
         suspend fun getUser(userId: Int): User?
         suspend fun getAllOrderDetails(orderId: Int): List<OrderDetails>?
-        suspend fun changeOrderStatus(orderId: Int, status: Constants.Status)
+        suspend fun updateOrder(order: Order, status: Constants.Status)
         fun viewOrderDetails(order: Order)
     }
 }

@@ -60,13 +60,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.name}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/name_title_text_view"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteY="8dp"
-                    tools:text="Book" />
+                    tools:layout_editor_absoluteY="8dp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/date_title_text_view"
@@ -88,12 +88,12 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.order.date}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/date_title_text_view"
-                    app:layout_constraintTop_toBottomOf="@+id/name_text_view"
-                    tools:text="Book" />
+                    app:layout_constraintTop_toBottomOf="@+id/name_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/price_title_text_view"
@@ -115,12 +115,12 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.total}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/price_title_text_view"
-                    app:layout_constraintTop_toBottomOf="@id/date_text_view"
-                    tools:text="Book" />
+                    app:layout_constraintTop_toBottomOf="@id/date_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/status_title_text_view"
@@ -142,12 +142,12 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.status}"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/status_title_text_view"
-                    app:layout_constraintTop_toBottomOf="@id/price_title_text_view"
-                    tools:text="Book" />
+                    app:layout_constraintTop_toBottomOf="@id/price_title_text_view" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"

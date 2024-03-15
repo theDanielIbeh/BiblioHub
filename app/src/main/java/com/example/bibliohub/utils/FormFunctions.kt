@@ -117,6 +117,23 @@ object FormFunctions {
         return isValid
     }
 
+    fun validateCardNumber(value: String, layout: TextInputLayout): Boolean {
+        val pattern = "[0-9\\s]{10,19}"
+        var isValid = false
+        if (value.isBlank()) {
+            val errorText = "This field is required"
+            layout.setFieldError(isError = true, errorText = errorText)
+        } else if (!Regex(pattern).matches(value)) {
+            val errorText = "Invalid Card Number"
+            layout.setFieldError(isError = true, errorText = errorText)
+        } else {
+            layout.setFieldError(isError = false)
+            isValid = true
+        }
+        layout.isErrorEnabled = !isValid
+        return isValid
+    }
+
     fun validateExpiryDate(value: String, layout: TextInputLayout): Boolean {
         val pattern = "^(0[1-9]|1[0-2])\\/?([0-9]{4}|[0-9]{2})\$"
         var isValid = false
@@ -192,10 +209,10 @@ object FormFunctions {
             val errorText = "This field is required"
             layout.setFieldError(isError = true, errorText = errorText)
         } else if (number != null && number < 0) {
-            val errorText = "Invalid PIN"
+            val errorText = "Invalid Number"
             layout.setFieldError(isError = true, errorText = errorText)
         } else if (number == null) {
-            val errorText = "Invalid PIN"
+            val errorText = "Invalid Number"
             layout.setFieldError(isError = true, errorText = errorText)
         } else {
             layout.setFieldError(isError = false)

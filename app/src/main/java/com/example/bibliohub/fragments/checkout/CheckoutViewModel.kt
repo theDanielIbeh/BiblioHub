@@ -1,23 +1,25 @@
 package com.example.bibliohub.fragments.checkout
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bibliohub.BiblioHubApplication
 import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.data.entities.order.Order
 import com.example.bibliohub.data.entities.order.OrderRepository
+import com.example.bibliohub.data.entities.orderDetails.OrderDetailsRepository
+import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 data class CheckoutModel(
     var address: String = "",
@@ -31,6 +33,8 @@ data class CheckoutModel(
 class CheckoutViewModel(
     private val userRepository: UserRepository,
     val orderRepository: OrderRepository,
+    val orderDetailsRepository: OrderDetailsRepository,
+    val productRepository: ProductRepository,
     biblioHubPreferencesRepository: BiblioHubPreferencesRepository
 ) : ViewModel() {
     private var _checkoutModel: MutableStateFlow<CheckoutModel> = MutableStateFlow(CheckoutModel())
@@ -50,8 +54,27 @@ class CheckoutViewModel(
         _checkoutModel.value = CheckoutModel()
     }
 
-    suspend fun updateOrderStatus(status: Constants.Status) {
-        currentOrder?.id?.let { orderRepository.updateOrderStatus(orderId = it, status = status) }
+    suspend fun updateOrder() {
+        currentOrder?.status = Constants.Status.COMPLETED
+        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
+        val currentDate = Date()
+        currentOrder?.date = formatter.format(currentDate)
+        currentOrder?.let { orderRepository.update(order = it) }
+
+        updateProducts()
+    }
+
+    private suspend fun updateProducts() {
+        val orderDetails = currentOrder?.id?.let {
+            orderDetailsRepository.getAllOrderDetailsByOrderId(
+                it
+            )
+        }
+        orderDetails?.forEach { details ->
+            val product = productRepository.getProductById(details.productId)
+            product?.quantity?.minus(details.quantity)
+            product?.let { productRepository.update(product = it) }
+        }
     }
 
     companion object {
@@ -61,10 +84,14 @@ class CheckoutViewModel(
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
                 val userRepository = application.container.userRepository
                 val orderRepository = application.container.orderRepository
+                val orderDetailsRepository = application.container.orderDetailsRepository
+                val productRepository = application.container.productRepository
                 val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
                 CheckoutViewModel(
                     userRepository = userRepository,
                     orderRepository = orderRepository,
+                    orderDetailsRepository = orderDetailsRepository,
+                    productRepository = productRepository,
                     biblioHubPreferencesRepository = biblioHubPreferencesRepository
                 )
             }

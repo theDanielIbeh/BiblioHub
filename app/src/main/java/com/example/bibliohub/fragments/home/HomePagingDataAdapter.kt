@@ -148,7 +148,7 @@ class HomePagingDataAdapter(
                     )
                 }
 
-                binding.memberImageView.setOnClickListener {
+                binding.info.setOnClickListener {
                     listener.viewProduct(product = product)
                 }
 

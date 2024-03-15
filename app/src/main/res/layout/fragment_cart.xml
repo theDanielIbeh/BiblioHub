@@ -30,13 +30,27 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/total_amount"
+            android:id="@+id/total_price_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@={viewModel.orderSum}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@string/total_price_colon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/instruction" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@={viewModel.orderSum}"
+            app:layout_constraintStart_toEndOf="@+id/total_price_title"
+            app:layout_constraintBottom_toBottomOf="@+id/total_price_title"
+            app:layout_constraintTop_toTopOf="@+id/total_price_title" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/checkout_btn"

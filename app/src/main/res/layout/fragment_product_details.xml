@@ -73,6 +73,58 @@
                     app:layout_constraintTop_toBottomOf="@+id/name_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/date_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/date_published_colon"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/author_text_view" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/date_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.product.pubDate}"
+                    android:textAlignment="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/date_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/author_text_view" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/category_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/category_colon"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/date_text_view" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/category_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.product.category}"
+                    android:textAlignment="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/category_title_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/date_text_view" />
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/description_title_text_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -85,7 +137,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/author_text_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/category_text_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/description_text_view"

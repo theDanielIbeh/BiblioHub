@@ -50,22 +50,22 @@ class ProductFormViewModel(
         _productModel.value = ProductModel()
     }
 
-    fun productModelToProduct(productModel: ProductModel, imgSrc: String?): Product {
+    fun productModelToProduct(productModel: ProductModel, img: String?) {
         val sdf = SimpleDateFormat(Constants.DATE_FORMAT_FULL, Locale.getDefault())
         val date = sdf.parse(productModel.pubDate)
         val dateStr =
             date?.let { HelperFunctions.getDateString(Constants.DATE_FORMAT_HYPHEN_DMY, it) }
-        return Product(
-            title = productModel.title,
-            author = productModel.author,
-            description = productModel.description,
-            isbn = productModel.isbn,
-            quantity = productModel.quantity.toInt(),
-            imgSrc = imgSrc,
-            pubDate = dateStr.toString(),
-            price = productModel.price,
+        product?.apply {
+            title = productModel.title
+            author = productModel.author
+            description = productModel.description
+            isbn = productModel.isbn
+            quantity = productModel.quantity.toInt()
+            imgSrc = img
+            pubDate = dateStr.toString()
+            price = productModel.price
             category = productModel.category
-        )
+        }
     }
 
     private fun productToProductModel(product: Product): ProductModel {
@@ -91,6 +91,10 @@ class ProductFormViewModel(
 
     suspend fun insertProduct(product: Product) {
         productRepository.insert(product = product)
+    }
+
+    suspend fun updateProduct(product: Product) {
+        productRepository.update(product = product)
     }
 
     suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product? =

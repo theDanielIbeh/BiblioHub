@@ -55,7 +55,7 @@ class CheckoutFragment : Fragment() {
                 FormFunctions.validatePostcode(it.toString(), binding.postcodeLayout)
             }
             cardNumberEditText.doAfterTextChanged {
-                FormFunctions.validateEmail(it.toString(), binding.cardNumberLayout)
+                FormFunctions.validateCardNumber(it.toString(), binding.cardNumberLayout)
             }
             expiryEditText.doAfterTextChanged {
                 FormFunctions.validateExpiryDate(it.toString(), binding.expiryLayout)
@@ -106,7 +106,7 @@ class CheckoutFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.currentOrder?.address = address
             viewModel.currentOrder?.postcode = postcode
-            viewModel.updateOrderStatus(Constants.Status.COMPLETED)
+            viewModel.updateOrder()
             viewModel.resetCheckoutModel()
             alertModalFragment.show(requireActivity().supportFragmentManager, "AlertModalFragment")
         }
@@ -121,11 +121,11 @@ class CheckoutFragment : Fragment() {
         pin: String
     ): Boolean {
         val isAddressValid = FormFunctions.validateName(address, binding.addressLayout)
-        val isPostcodeValid = FormFunctions.validateName(postcode, binding.postcodeLayout)
-        val isCardNumberValid = FormFunctions.validateEmail(cardNumber, binding.cardNumberLayout)
-        val isExpiryValid = FormFunctions.validatePassword(expiry, binding.expiryLayout)
-        val isCVVValid = FormFunctions.validatePassword(cvv, binding.cvvLayout)
-        val isPINValid = FormFunctions.validatePassword(pin, binding.pinLayout)
+        val isPostcodeValid = FormFunctions.validatePostcode(postcode, binding.postcodeLayout)
+        val isCardNumberValid = FormFunctions.validateCardNumber(cardNumber, binding.cardNumberLayout)
+        val isExpiryValid = FormFunctions.validateExpiryDate(expiry, binding.expiryLayout)
+        val isCVVValid = FormFunctions.validateCVV(cvv, binding.cvvLayout)
+        val isPINValid = FormFunctions.validatePIN(pin, binding.pinLayout)
 
 
         return isAddressValid && isPostcodeValid && isCardNumberValid && isExpiryValid && isCVVValid && isPINValid

@@ -68,4 +68,5 @@
     <string name="approve">Approve</string>
     <string name="quantity_colon">Quantity:</string>
     <string name="unit_price_colon">Unit Price (£):</string>
+    <string name="date_published_colon">Date Published:</string>
 </resources>

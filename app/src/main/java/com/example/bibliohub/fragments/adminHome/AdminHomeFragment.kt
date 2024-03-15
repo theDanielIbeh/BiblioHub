@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentAdminHomeBinding
+import com.example.bibliohub.fragments.home.HomeFragmentDirections
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -187,6 +188,13 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
         viewModel.deleteProduct(product = product)
     }
 
+    override fun viewProduct(product: Product) {
+        findNavController().navigate(
+            AdminHomeFragmentDirections.actionAdminHomeFragmentToAdminProductDetailsFragment(
+                product = product
+            )
+        )
+    }
     private fun setOnBackPressedCallback() {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {

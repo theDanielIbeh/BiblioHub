@@ -19,7 +19,7 @@ interface OrderDetailsDao {
     fun getOrderDetailsByOrderId(orderId: Int): LiveData<List<OrderDetails>>
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
-    fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails>
+    suspend fun getStaticOrderDetailsByOrderId(orderId: Int): List<OrderDetails>
 
     @Query(
         "DELETE FROM order_details WHERE order_id = :orderId AND " +

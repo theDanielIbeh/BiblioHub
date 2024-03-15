@@ -178,8 +178,8 @@ class AdminOrdersFragment : BaseSearchableFragment<Product>(),
     override suspend fun getAllOrderDetails(orderId: Int): List<OrderDetails>? =
         viewModel.getAllOrderDetails(orderId = orderId)
 
-    override suspend fun changeOrderStatus(orderId: Int, status: Constants.Status) {
-        viewModel.changeOrderStatus(orderId = orderId, status = status)
+    override suspend fun updateOrder(order: Order, status: Constants.Status) {
+        viewModel.updateOrder(order = order, status = status)
     }
 
     override fun viewOrderDetails(order: Order) {

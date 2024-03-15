@@ -20,6 +20,9 @@ import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AdminOrdersViewModel(
     private val userRepository: UserRepository,
@@ -31,8 +34,13 @@ class AdminOrdersViewModel(
     internal var selectedStatus: String? = ""
 
     suspend fun getUser(userId: Int): User? = userRepository.getUserById(userId = userId)
-    suspend fun changeOrderStatus(orderId: Int, status: Constants.Status) =
-        orderRepository.updateOrderStatus(orderId = orderId, status = status)
+    suspend fun updateOrder(order: Order, status: Constants.Status) {
+        order.status = status
+        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
+        val currentDate = Date()
+        order.date = formatter.format(currentDate)
+        orderRepository.update(order = order)
+    }
 
     suspend fun getAllOrderDetails(orderId: Int): List<OrderDetails>? =
         orderDetailsRepository.getAllOrderDetailsByOrderId(orderId = orderId)

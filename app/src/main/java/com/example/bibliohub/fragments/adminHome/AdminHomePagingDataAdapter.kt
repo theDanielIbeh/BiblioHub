@@ -73,6 +73,10 @@ class AdminHomePagingDataAdapter(
                 binding.priceTextView.text = product.price
                 binding.quantityTextView.text = product.quantity.toString()
 
+                binding.info.setOnClickListener {
+                    listener.viewProduct(product = product)
+                }
+
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -83,5 +87,6 @@ class AdminHomePagingDataAdapter(
     interface HomeListener {
         fun editProduct(product: Product)
         fun deleteProduct(product: Product)
+        fun viewProduct(product: Product)
     }
 }

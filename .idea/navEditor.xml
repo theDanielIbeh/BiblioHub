@@ -19,6 +19,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_adminHomeFragment_to_adminProductDetailsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_adminHomeFragment_to_productFormFragment">
                               <value>
                                 <LayoutPositions />
@@ -58,6 +63,18 @@
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="adminProductDetailsFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="267" />
+                            <option name="y" value="46" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

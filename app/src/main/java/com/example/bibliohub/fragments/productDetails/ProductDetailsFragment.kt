@@ -14,7 +14,11 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentProductDetailsBinding
+import com.example.bibliohub.utils.Constants
+import com.example.bibliohub.utils.HelperFunctions
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ProductDetailsFragment : Fragment() {
 
@@ -32,7 +36,11 @@ class ProductDetailsFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         viewModel.product = args.product
-        Log.d("Details", viewModel.product.toString())
+
+        val sdf = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
+        val date = args.product.pubDate?.let { sdf.parse(it) }
+        viewModel.product.pubDate = date?.let { HelperFunctions.getDateString(Constants.DATE_FORMAT_FULL, it) }
+
         viewModel.product.let { product ->
             product.imgSrc?.let {
                 loadImage(it)

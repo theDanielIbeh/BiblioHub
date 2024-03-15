@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_adminHomeFragment_to_productFormFragment"
             app:destination="@id/productFormFragment" />
+        <action
+            android:id="@+id/action_adminHomeFragment_to_adminProductDetailsFragment"
+            app:destination="@id/adminProductDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productFormFragment"
@@ -41,5 +44,14 @@
         <argument
             android:name="order"
             app:argType="com.example.bibliohub.data.entities.order.Order" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminProductDetailsFragment"
+        android:name="com.example.bibliohub.fragments.adminProductDetails.AdminProductDetailsFragment"
+        android:label="fragment_admin_product_details"
+        tools:layout="@layout/fragment_admin_product_details" >
+        <argument
+            android:name="product"
+            app:argType="com.example.bibliohub.data.entities.product.Product" />
     </fragment>
 </navigation>
