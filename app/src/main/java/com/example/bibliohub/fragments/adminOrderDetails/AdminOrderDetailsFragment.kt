@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentAdminOrderDetailsBinding
 import com.example.bibliohub.utils.Constants
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.system.exitProcess
 
 class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter.HomeListener {
 
@@ -95,6 +99,7 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
             }
         }
 
+        setOnBackPressedCallback()
         return binding.root
     }
 
@@ -112,4 +117,14 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
 
     override suspend fun getProduct(productId: Int): Product? =
         viewModel.getProductById(productId = productId)
+
+    private fun setOnBackPressedCallback() {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack(R.id.adminOrdersFragment, false)
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
 }

@@ -7,28 +7,24 @@
             android:checked="true"
             android:icon="@drawable/home"
             android:title="@string/home"
-            app:iconTint="@color/menu_item"
             app:showAsAction="ifRoom" />
 
         <item
             android:id="@+id/cart_item"
             android:icon="@drawable/cart"
             android:title="@string/cart"
-            app:iconTint="@color/menu_item"
             app:showAsAction="ifRoom" />
 
         <item
             android:id="@+id/admin_home_item"
             android:icon="@drawable/home"
             android:title="@string/home"
-            app:iconTint="@color/menu_item"
             app:showAsAction="ifRoom" />
 
         <item
             android:id="@+id/order_item"
             android:icon="@drawable/order"
             android:title="@string/orders"
-            app:iconTint="@color/menu_item"
             app:showAsAction="ifRoom" />
     </group>
     <item
