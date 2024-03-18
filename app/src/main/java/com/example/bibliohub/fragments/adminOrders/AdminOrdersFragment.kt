@@ -114,7 +114,6 @@ class AdminOrdersFragment : BaseSearchableFragment<Product>(),
         binding.acvFilter.setAdapter(
             getAdapter(
                 listOf(
-                    Constants.Status.PENDING.name,
                     Constants.Status.COMPLETED.name,
                     Constants.Status.APPROVED.name,
                     Constants.Status.REJECTED.name,

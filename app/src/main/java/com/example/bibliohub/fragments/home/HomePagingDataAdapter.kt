@@ -136,6 +136,7 @@ class HomePagingDataAdapter(
                 binding.nameTextView.text = product.title
                 binding.authorTextView.text = product.author
                 binding.priceTextView.text = product.price
+                binding.quantityTextView.text = product.quantity.toString()
                 //make sure order quantity view has item to display
                 updateOrderQtyView(orderQuantity)
 

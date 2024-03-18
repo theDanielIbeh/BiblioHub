@@ -63,6 +63,7 @@
     <string name="name_colon">Name:</string>
     <string name="date_colon">Date:</string>
     <string name="total_price_colon">Total Price (£):</string>
+    <string name="item_price_colon">Item Price (£):</string>
     <string name="status_colon">Status:</string>
     <string name="reject">Reject</string>
     <string name="approve">Approve</string>

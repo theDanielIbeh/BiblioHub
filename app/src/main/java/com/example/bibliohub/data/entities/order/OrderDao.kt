@@ -26,6 +26,6 @@ interface OrderDao {
     @Query("UPDATE `order` SET status = :status WHERE id = :orderId")
     suspend fun updateOrderStatus(orderId: Int, status: Constants.Status)
 
-    @Query("SELECT * FROM `order` ORDER BY date DESC")
+    @Query("SELECT * FROM `order` WHERE status != 'PENDING' ORDER BY date DESC")
     fun getAllOrders(): PagingSource<Int, Order>
 }
