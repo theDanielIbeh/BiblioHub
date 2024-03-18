@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentAdminOrderDetailsBinding
 import com.example.bibliohub.utils.Constants
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -41,10 +39,9 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
         viewModel.order = args.order
         viewModel.order.status?.name?.let { viewModel.status = it }
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                viewModel.getUserById()?.let {
-                    viewModel.user = it
-                }
+            viewModel.orderDetails = viewModel.getOrderDetailsByOrderId()
+            viewModel.getUserById()?.let {
+                viewModel.user = it
             }
             viewModel.name = "${viewModel.user.firstName} ${viewModel.user.lastName}"
 

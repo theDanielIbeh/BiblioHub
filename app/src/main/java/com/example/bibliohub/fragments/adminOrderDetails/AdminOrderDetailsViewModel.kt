@@ -3,14 +3,12 @@ package com.example.bibliohub.fragments.adminOrderDetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.bibliohub.BiblioHubApplication
-import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.data.entities.order.Order
 import com.example.bibliohub.data.entities.order.OrderRepository
 import com.example.bibliohub.data.entities.orderDetails.OrderDetails
@@ -19,8 +17,6 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
-import com.example.bibliohub.utils.Constants
-import kotlinx.coroutines.launch
 
 class AdminOrderDetailsViewModel(
     val userRepository: UserRepository,
@@ -35,9 +31,11 @@ class AdminOrderDetailsViewModel(
     lateinit var status: String
 
 
-    internal val orderDetails: LiveData<PagingData<OrderDetails>> =
-        orderDetailsRepository.getAllOrderDetails(
+    lateinit var orderDetails: LiveData<PagingData<OrderDetails>>
+    fun getOrderDetailsByOrderId(): LiveData<PagingData<OrderDetails>> =
+        orderDetailsRepository.getAllOrderDetailsByIdPaging(
             10,
+            orderId = order.id
         ).cachedIn(viewModelScope)
 
     suspend fun getProductById(productId: Int): Product? = productRepository.getProductById(productId = productId)

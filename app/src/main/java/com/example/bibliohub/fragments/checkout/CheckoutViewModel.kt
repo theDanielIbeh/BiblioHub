@@ -72,8 +72,11 @@ class CheckoutViewModel(
         }
         orderDetails?.forEach { details ->
             val product = productRepository.getProductById(details.productId)
-            product?.quantity?.minus(details.quantity)
-            product?.let { productRepository.update(product = it) }
+
+            product?.let {
+                it.quantity -= details.quantity
+                productRepository.update(product = it)
+            }
         }
     }
 

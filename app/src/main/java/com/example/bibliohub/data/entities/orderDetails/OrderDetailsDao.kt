@@ -28,7 +28,7 @@ interface OrderDetailsDao {
     suspend fun deleteOrderDetailsByOrderAndProductID(orderId: Int, productId: Int)
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
-    fun getAllOrderDetailsByOrderId(orderId: Int): List<OrderDetails>?
+    suspend fun getAllOrderDetailsByOrderId(orderId: Int): List<OrderDetails>?
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
     fun getAllOrderDetailsByIdPaging(orderId: Int): PagingSource<Int, OrderDetails>

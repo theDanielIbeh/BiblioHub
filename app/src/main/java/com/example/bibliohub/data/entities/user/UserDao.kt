@@ -25,5 +25,5 @@ interface UserDao {
     @Query(
         "SELECT * FROM user where id = :userId"
     )
-    fun getUserById(userId: Int): User?
+    suspend fun getUserById(userId: Int): User?
 }
