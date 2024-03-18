@@ -15,7 +15,7 @@ interface ProductRepository {
     fun getProductsByIDs(pageSize: Int, productIDs: List<Int>): LiveData<PagingData<Product>>
     fun getProductsInCart(pageSize: Int, cartIds: List<Int>): LiveData<PagingData<Product>>
     fun getAllProducts(pageSize: Int, filterText: String?): LiveData<PagingData<Product>>
-    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product?
+    suspend fun getProductByImageSrc(imgSrc: String): Product?
 }
 
 class OfflineProductRepository(
@@ -73,6 +73,6 @@ class OfflineProductRepository(
         }
     ).liveData
 
-    override suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product? =
-        productDao.getProductByUserIdAndImageSrc(userId = userId, imgSrc = imgSrc)
+    override suspend fun getProductByImageSrc(imgSrc: String): Product? =
+        productDao.getProductByImageSrc(imgSrc = imgSrc)
 }

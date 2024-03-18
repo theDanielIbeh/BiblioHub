@@ -22,7 +22,7 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE id = :productId")
     suspend fun getProductById(productId: Int): Product?
 
-    @Query("SELECT * FROM product WHERE quantity > 0 AND title LIKE :filterText")
+    @Query("SELECT * FROM product WHERE quantity > 0 AND LOWER(title) LIKE LOWER(:filterText)")
     fun getAvailableProducts(filterText: String?): PagingSource<Int, Product>
 
     @Query("SELECT * FROM product WHERE quantity > 0 AND id IN (:productIDs)")
@@ -30,9 +30,9 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE quantity > 0 AND id IN (:cartIds)")
     fun getProductsInCart(cartIds: List<Int>): PagingSource<Int, Product>
 
-    @Query("SELECT * FROM product WHERE title LIKE :filterText")
+    @Query("SELECT * FROM product WHERE LOWER(title) LIKE LOWER(:filterText)")
     fun getAllProducts(filterText: String?): PagingSource<Int, Product>
 
-    @Query("SELECT * FROM product WHERE id = :userId AND img_src = :imgSrc")
-    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product?
+    @Query("SELECT * FROM product WHERE img_src = :imgSrc")
+    suspend fun getProductByImageSrc(imgSrc: String): Product?
 }

@@ -194,11 +194,10 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/image_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
                     android:hint="@string/click_to_add_image"
                     android:imeOptions="actionNext"
-                    android:inputType="none"
                     android:text="@={viewModel.productModel.imgSrc}" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -214,24 +213,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_layout">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <ImageView
                     android:id="@+id/product_image_view"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/no_image"
+                    android:contentDescription="Product image" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/red"
-                    android:text="@string/delete"
-                    app:cornerRadius="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/pub_date_layout"

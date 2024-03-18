@@ -1,6 +1,5 @@
 package com.example.bibliohub.fragments.productForm
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
@@ -10,7 +9,6 @@ import com.example.bibliohub.data.BiblioHubPreferencesRepository
 import com.example.bibliohub.data.entities.order.OrderRepository
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
-import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
@@ -42,30 +40,28 @@ class ProductFormViewModel(
     private var _productModel: MutableStateFlow<ProductModel> = MutableStateFlow(ProductModel())
     val productModel: StateFlow<ProductModel> = _productModel.asStateFlow()
     var product: Product? = null
-    var loggedInUser: LiveData<User?> =
-        biblioHubPreferencesRepository.getPreference(User::class.java, Constants.USER)
     val categoryList = listOf("Fiction", "Non-Fiction")
 
     fun resetProductModel() {
         _productModel.value = ProductModel()
     }
 
-    fun productModelToProduct(productModel: ProductModel, img: String?) {
+    fun productModelToProduct(productModel: ProductModel, img: String?): Product {
         val sdf = SimpleDateFormat(Constants.DATE_FORMAT_FULL, Locale.getDefault())
         val date = sdf.parse(productModel.pubDate)
         val dateStr =
             date?.let { HelperFunctions.getDateString(Constants.DATE_FORMAT_HYPHEN_DMY, it) }
-        product?.apply {
-            title = productModel.title
-            author = productModel.author
-            description = productModel.description
-            isbn = productModel.isbn
-            quantity = productModel.quantity.toInt()
-            imgSrc = img
-            pubDate = dateStr.toString()
-            price = productModel.price
+        return Product(
+            title = productModel.title,
+            author = productModel.author,
+            description = productModel.description,
+            isbn = productModel.isbn,
+            quantity = productModel.quantity.toInt(),
+            imgSrc = img,
+            pubDate = dateStr.toString(),
+            price = productModel.price,
             category = productModel.category
-        }
+        )
     }
 
     private fun productToProductModel(product: Product): ProductModel {
@@ -78,7 +74,7 @@ class ProductFormViewModel(
             description = product.description ?: "",
             isbn = product.isbn ?: "",
             quantity = product.quantity.toString(),
-            imgSrc = product.imgSrc?.let { File(it).name },
+            imgSrc = product.imgSrc,
             pubDate = dateStr.toString(),
             price = product.price,
             category = product.category ?: ""
@@ -97,8 +93,8 @@ class ProductFormViewModel(
         productRepository.update(product = product)
     }
 
-    suspend fun getProductByUserIdAndImageSrc(userId: Int, imgSrc: String): Product? =
-        productRepository.getProductByUserIdAndImageSrc(userId = userId, imgSrc = imgSrc)
+    suspend fun getProductByImageSrc(imgSrc: String): Product? =
+        productRepository.getProductByImageSrc(imgSrc = imgSrc)
 
     suspend fun update(product: Product) {
         productRepository.update(product = product)

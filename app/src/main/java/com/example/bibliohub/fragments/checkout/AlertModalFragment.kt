@@ -39,7 +39,7 @@ class AlertModalFragment : BottomSheetDialogFragment() {
      * Navigates to the Home screen.
      */
     private fun navigateToHome() {
-//        findNavController().popBackStack(R.id.homeFragment, true)
+//        findNavController().popBackStack(R.id.homeFragment, false)
         requireActivity().finish()
         val intent = Intent(activity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
