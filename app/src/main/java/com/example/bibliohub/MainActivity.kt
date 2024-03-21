@@ -1,19 +1,27 @@
 package com.example.bibliohub
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.NavHostFragment
+import com.example.bibliohub.data.ProductList
 import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
 import com.example.bibliohub.utils.HelperFunctions.createMediaDirectory
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+    private val PERMISSION_REQUEST_CODE = 200
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,6 +59,11 @@ class MainActivity : AppCompatActivity() {
             val navController = navHostFragment.navController
             navController.setGraph(navGraph, intent.extras)
         }
+
+        if (!checkPermission())
+            requestPermission()
+
+        viewModel.insertProducts()
     }
 
     /**
@@ -66,5 +79,19 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun checkPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.INTERNET
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.INTERNET),
+            PERMISSION_REQUEST_CODE
+        )
     }
 }

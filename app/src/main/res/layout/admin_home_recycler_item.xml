@@ -51,7 +51,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:textAlignment="textStart"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/memberImageView"
@@ -139,7 +139,7 @@
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/memberImageView" />
+                    app:layout_constraintTop_toBottomOf="@+id/quantity_text_view" />
 
                 <Button
                     android:id="@+id/delete_product_button"
@@ -155,7 +155,7 @@
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/memberImageView" />
+                    app:layout_constraintTop_toBottomOf="@+id/quantity_text_view" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

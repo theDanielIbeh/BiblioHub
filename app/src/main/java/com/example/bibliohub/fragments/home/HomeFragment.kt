@@ -63,7 +63,6 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
 
     override fun setBinding() {
         setupStatusFilter()
-        binding.btn.setOnClickListener { refresh() }
     }
 
     override fun initRecycler() {
@@ -154,10 +153,6 @@ class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.Ho
                 product = product
             )
         )
-    }
-
-    private fun refresh() {
-        viewModel.insertProducts()
     }
 
     /**

@@ -65,7 +65,6 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
 
     override fun setBinding() {
         setupStatusFilter()
-        binding.btn.setOnClickListener { refresh() }
         binding.addNewBtn.setOnClickListener {
             findNavController().navigate(
                 AdminHomeFragmentDirections.actionAdminHomeFragmentToProductFormFragment(
@@ -116,10 +115,6 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
             View.VISIBLE
         val size = if (listSize >= 30) "$listSize+" else listSize.toString()
         binding.noOfResultsTextview.text = getString(R.string.y_results, size)
-    }
-
-    private fun refresh() {
-        viewModel.insertProducts()
     }
 
     /**

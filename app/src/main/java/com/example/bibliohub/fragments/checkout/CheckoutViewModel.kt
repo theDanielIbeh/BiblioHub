@@ -56,7 +56,7 @@ class CheckoutViewModel(
 
     suspend fun updateOrder() {
         currentOrder?.status = Constants.Status.COMPLETED
-        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_HYPHEN_DMY, Locale.getDefault())
+        val formatter = SimpleDateFormat(Constants.DATE_FORMAT_SPREAD, Locale.getDefault())
         val currentDate = Date()
         currentOrder?.date = formatter.format(currentDate)
         currentOrder?.let { orderRepository.update(order = it) }
