@@ -9,10 +9,6 @@
         <import type="android.view.View" />
 
         <variable
-            name="hasStatusChanged"
-            type="Boolean" />
-
-        <variable
             name="viewModel"
             type="com.example.bibliohub.fragments.adminOrderDetails.AdminOrderDetailsViewModel" />
     </data>
@@ -30,7 +26,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_constraint"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,6 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/status_text_view"
                     tools:listitem="@layout/admin_order_details_recycler_item">
@@ -164,48 +161,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottom_constraint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:visibility="@{hasStatusChanged ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/content_scroll_view">
-
-            <Button
-                android:id="@+id/reject_product_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:backgroundTint="@color/red"
-                android:hapticFeedbackEnabled="false"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/reject"
-                android:textColor="@color/white"
-                app:cornerRadius="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <Button
-                android:id="@+id/approve_product_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/lightGreen"
-                android:hapticFeedbackEnabled="false"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/approve"
-                android:textColor="@color/white"
-                app:cornerRadius="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

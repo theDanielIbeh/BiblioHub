@@ -29,6 +29,7 @@
     <string name="address">Address</string>
     <string name="postcode">Postcode</string>
     <string name="expiry_date">Expiry Date</string>
+    <string name="expiry_date_example">Eg. 02/12</string>
     <string name="cvv">CVV</string>
     <string name="pin">PIN</string>
     <string name="card_number">Card Number</string>

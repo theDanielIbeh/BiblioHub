@@ -40,10 +40,6 @@ class AdminOrderDetailsViewModel(
 
     suspend fun getProductById(productId: Int): Product? = productRepository.getProductById(productId = productId)
 
-    suspend fun updateOrder() {
-        orderRepository.update(order = order)
-    }
-
     suspend fun getUserById() =
         userRepository.getUserById(userId = order.customerId)
 

@@ -60,45 +60,6 @@ class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter
 
         initRecycler()
 
-        with(binding)
-        {
-            hasStatusChanged =
-                (viewModel?.order?.status != Constants.Status.COMPLETED)
-
-            rejectProductButton.setOnClickListener {
-                lifecycleScope.launch {
-                    viewModel?.order?.id?.let { it1 ->
-                        viewModel?.order?.apply {
-                            status = Constants.Status.REJECTED
-                            val formatter = SimpleDateFormat(
-                                Constants.DATE_FORMAT_SPREAD,
-                                Locale.getDefault()
-                            )
-                            val currentDate = Date()
-                            date = formatter.format(currentDate)
-                        }
-                        viewModel?.updateOrder()
-                    }
-                }
-            }
-            approveProductButton.setOnClickListener {
-                lifecycleScope.launch {
-                    viewModel?.order?.id?.let { it1 ->
-                        viewModel?.order?.apply {
-                            status = Constants.Status.APPROVED
-                            val formatter = SimpleDateFormat(
-                                Constants.DATE_FORMAT_SPREAD,
-                                Locale.getDefault()
-                            )
-                            val currentDate = Date()
-                            date = formatter.format(currentDate)
-                        }
-                        viewModel?.updateOrder()
-                    }
-                }
-            }
-        }
-
         setOnBackPressedCallback()
         return binding.root
     }
