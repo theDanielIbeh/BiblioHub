@@ -17,10 +17,10 @@ interface OrderDao {
     @Update
     suspend fun update(order: Order)
 
-    @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
+    @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND user_id = :userId")
     suspend fun getActiveOrderByUserId(userId: Int): Order?
 
-    @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND customer_id = :userId")
+    @Query("SELECT * FROM `order` WHERE status = 'PENDING' AND user_id = :userId")
     suspend fun getStaticActiveOrderByUserId(userId: Int): Order?
 
     @Query("UPDATE `order` SET status = :status WHERE id = :orderId")

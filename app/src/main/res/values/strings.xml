@@ -71,4 +71,5 @@
     <string name="quantity_colon">Quantity:</string>
     <string name="unit_price_colon">Unit Price (£):</string>
     <string name="date_published_colon">Date Published:</string>
+    <string name="product_form_desc">Add a new book or edit the details of an existing book</string>
 </resources>

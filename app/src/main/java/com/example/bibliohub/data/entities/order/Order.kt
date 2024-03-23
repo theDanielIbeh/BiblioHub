@@ -13,7 +13,7 @@ data class Order(
     @ColumnInfo(name = "id")
     val id: Int = 0,
 
-    @ColumnInfo(name = "customer_id")
+    @ColumnInfo(name = "user_id")
     var customerId: Int,
 
     @ColumnInfo(name = "status")
