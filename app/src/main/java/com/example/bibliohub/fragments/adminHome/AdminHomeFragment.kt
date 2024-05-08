@@ -24,11 +24,13 @@ import com.example.bibliohub.databinding.FragmentAdminHomeBinding
 import com.example.bibliohub.fragments.home.HomeFragmentDirections
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
+@AndroidEntryPoint
 class AdminHomeFragment : BaseSearchableFragment<Product>(),
     AdminHomePagingDataAdapter.HomeListener {
 
@@ -36,7 +38,7 @@ class AdminHomeFragment : BaseSearchableFragment<Product>(),
         private val TAG = AdminHomeFragment::getTag
     }
 
-    private val viewModel: AdminHomeViewModel by viewModels { AdminHomeViewModel.Factory }
+    private val viewModel: AdminHomeViewModel by viewModels()
     private lateinit var binding: FragmentAdminHomeBinding
     private lateinit var adapter: AdminHomePagingDataAdapter
     override var viewModelFilterText: String? = null

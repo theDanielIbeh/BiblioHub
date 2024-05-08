@@ -21,19 +21,20 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentHomeBinding
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
-
+@AndroidEntryPoint
 class HomeFragment : BaseSearchableFragment<Product>(), HomePagingDataAdapter.HomeListener {
 
     companion object {
         private val TAG = HomeFragment::getTag
     }
 
-    private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
+    private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomePagingDataAdapter
     override var viewModelFilterText: String? = null

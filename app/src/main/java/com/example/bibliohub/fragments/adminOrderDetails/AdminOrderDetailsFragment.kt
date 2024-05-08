@@ -18,15 +18,17 @@ import com.example.bibliohub.R
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentAdminOrderDetailsBinding
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.system.exitProcess
 
+@AndroidEntryPoint
 class AdminOrderDetailsFragment : Fragment(), AdminOrderDetailsPagingDataAdapter.HomeListener {
 
-    private val viewModel: AdminOrderDetailsViewModel by viewModels { AdminOrderDetailsViewModel.Factory }
+    private val viewModel: AdminOrderDetailsViewModel by viewModels()
     private lateinit var binding: FragmentAdminOrderDetailsBinding
     private lateinit var adapter: AdminOrderDetailsPagingDataAdapter
     private val args: AdminOrderDetailsFragmentArgs by navArgs()

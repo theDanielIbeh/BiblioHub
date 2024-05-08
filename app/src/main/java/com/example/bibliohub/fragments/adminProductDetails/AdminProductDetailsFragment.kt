@@ -11,12 +11,14 @@ import com.bumptech.glide.Glide
 import com.example.bibliohub.databinding.FragmentAdminProductDetailsBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@AndroidEntryPoint
 class AdminProductDetailsFragment : Fragment() {
 
-    private val viewModel: AdminProductDetailsViewModel by viewModels { AdminProductDetailsViewModel.Factory }
+    private val viewModel: AdminProductDetailsViewModel by viewModels()
     private lateinit var binding: FragmentAdminProductDetailsBinding
     private val args: AdminProductDetailsFragmentArgs by navArgs()
 

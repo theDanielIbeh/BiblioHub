@@ -12,12 +12,14 @@ import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
 data class ProductModel(
     var title: String = "",
@@ -31,7 +33,8 @@ data class ProductModel(
     var category: String = ""
 )
 
-class ProductFormViewModel(
+@HiltViewModel
+class ProductFormViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val orderRepository: OrderRepository,
     private val productRepository: ProductRepository,
@@ -98,24 +101,5 @@ class ProductFormViewModel(
 
     suspend fun update(product: Product) {
         productRepository.update(product = product)
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val userRepository = application.container.userRepository
-                val orderRepository = application.container.orderRepository
-                val productRepository = application.container.productRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                ProductFormViewModel(
-                    userRepository = userRepository,
-                    orderRepository = orderRepository,
-                    productRepository = productRepository,
-                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
-                )
-            }
-        }
     }
 }

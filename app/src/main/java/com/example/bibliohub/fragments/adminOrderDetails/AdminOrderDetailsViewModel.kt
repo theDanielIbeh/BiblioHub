@@ -17,8 +17,11 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AdminOrderDetailsViewModel(
+@HiltViewModel
+class AdminOrderDetailsViewModel  @Inject constructor(
     val userRepository: UserRepository,
     val orderRepository: OrderRepository,
     val orderDetailsRepository: OrderDetailsRepository,
@@ -42,25 +45,4 @@ class AdminOrderDetailsViewModel(
 
     suspend fun getUserById() =
         userRepository.getUserById(userId = order.customerId)
-
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val userRepository = application.container.userRepository
-                val productRepository = application.container.productRepository
-                val orderRepository = application.container.orderRepository
-                val orderDetailsRepository = application.container.orderDetailsRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                AdminOrderDetailsViewModel(
-                    userRepository = userRepository,
-                    orderRepository = orderRepository,
-                    orderDetailsRepository = orderDetailsRepository,
-                    productRepository = productRepository,
-                )
-            }
-        }
-    }
 }

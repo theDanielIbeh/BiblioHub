@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.bibliohub.data.entities.orderDetails.OrderDetails
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.databinding.FragmentCartBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CartFragment : Fragment(), CartPagingDataAdapter.CartListener {
 
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val viewModel: CartViewModel by viewModels()
     private lateinit var binding: FragmentCartBinding
     private lateinit var adapter: CartPagingDataAdapter
 

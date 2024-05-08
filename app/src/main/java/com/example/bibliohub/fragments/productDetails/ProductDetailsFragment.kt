@@ -16,13 +16,15 @@ import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentProductDetailsBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.HelperFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@AndroidEntryPoint
 class ProductDetailsFragment : Fragment() {
 
-    private val viewModel: ProductDetailsViewModel by viewModels { ProductDetailsViewModel.Factory }
+    private val viewModel: ProductDetailsViewModel by viewModels()
     private lateinit var binding: FragmentProductDetailsBinding
     private val args: ProductDetailsFragmentArgs by navArgs()
 

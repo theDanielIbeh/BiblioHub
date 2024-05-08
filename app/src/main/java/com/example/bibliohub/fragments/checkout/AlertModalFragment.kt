@@ -10,7 +10,9 @@ import com.example.bibliohub.MainActivity
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentAlertModalBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AlertModalFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentAlertModalBinding
 

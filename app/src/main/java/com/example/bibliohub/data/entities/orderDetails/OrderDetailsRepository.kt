@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
+import javax.inject.Inject
 
 interface OrderDetailsRepository {
     suspend fun insert(orderDetails: OrderDetails)
@@ -22,7 +23,7 @@ interface OrderDetailsRepository {
     fun getAllOrderDetails(pageSize: Int): LiveData<PagingData<OrderDetails>>
 }
 
-class OfflineOrderDetailsRepository(
+class OfflineOrderDetailsRepository @Inject constructor(
     private val orderDetailsDao: OrderDetailsDao
 ) : OrderDetailsRepository {
     override suspend fun insert(orderDetails: OrderDetails) {

@@ -15,13 +15,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentRegisterBinding
 import com.example.bibliohub.utils.FormFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
-    private val viewModel: RegisterViewModel by viewModels { RegisterViewModel.Factory }
+    private val viewModel: RegisterViewModel by viewModels()
     private lateinit var binding: FragmentRegisterBinding
 
     override fun onCreateView(
@@ -33,6 +35,7 @@ class RegisterFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
+        viewModel.resetRegisterModel()
 
         with(binding) {
             firstNameEditText.requestFocus()
@@ -102,7 +105,7 @@ class RegisterFragment : Fragment() {
             if (user == null) {
                 viewModel.insertUser()
                 navigateToLoginScreen()
-                viewModel.resetRegisterModel()
+//                viewModel.resetRegisterModel()
             } else {
                 Toast.makeText(
                     requireContext(),

@@ -14,11 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.bibliohub.databinding.FragmentCheckoutBinding
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.FormFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CheckoutFragment : Fragment() {
 
-    private val viewModel: CheckoutViewModel by viewModels { CheckoutViewModel.Factory }
+    private val viewModel: CheckoutViewModel by viewModels()
     private lateinit var binding: FragmentCheckoutBinding
     private var alertModalFragment = AlertModalFragment()
 
@@ -31,6 +33,7 @@ class CheckoutFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        viewModel.resetCheckoutModel()
 
         //check if user has existing order details
         viewModel.loggedInUser.observe(viewLifecycleOwner) { userInfo ->
@@ -107,7 +110,7 @@ class CheckoutFragment : Fragment() {
             viewModel.currentOrder?.address = address
             viewModel.currentOrder?.postcode = postcode
             viewModel.updateOrder()
-            viewModel.resetCheckoutModel()
+//            viewModel.resetCheckoutModel()
             alertModalFragment.show(requireActivity().supportFragmentManager, "AlertModalFragment")
         }
     }

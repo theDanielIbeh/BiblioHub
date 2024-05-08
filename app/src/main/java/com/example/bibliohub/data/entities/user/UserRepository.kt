@@ -1,6 +1,7 @@
 package com.example.bibliohub.data.entities.user
 
 import androidx.lifecycle.LiveData
+import javax.inject.Inject
 
 interface UserRepository {
     suspend fun insert(user: User)
@@ -9,7 +10,7 @@ interface UserRepository {
     suspend fun getUserById(userId: Int): User?
 }
 
-class OfflineUserRepository(
+class OfflineUserRepository @Inject constructor(
     private val userDao: UserDao
 ) : UserRepository {
     override suspend fun insert(user: User) {

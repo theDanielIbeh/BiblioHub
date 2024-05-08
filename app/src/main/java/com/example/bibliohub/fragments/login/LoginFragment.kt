@@ -20,17 +20,18 @@ import com.example.bibliohub.R
 import com.example.bibliohub.databinding.FragmentLoginBinding
 import com.example.bibliohub.utils.FormFunctions.validateLoginEmail
 import com.example.bibliohub.utils.FormFunctions.validateLoginPassword
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     companion object {
         private val TAG = LoginFragment::class.java.name
     }
 
-    private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+    private val viewModel: LoginViewModel by viewModels()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -42,7 +43,7 @@ class LoginFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
-
+        viewModel.resetLoginModel()
         with(binding) {
             usernameEditText.requestFocus()
             usernameEditText.doAfterTextChanged {
@@ -108,7 +109,7 @@ class LoginFragment : Fragment() {
                         viewModel.savePreferences(user)
                         val intent = Intent(requireContext(), CustomerActivity::class.java)
                         startActivity(intent)
-                        viewModel.resetLoginModel()
+//                        viewModel.resetLoginModel()
                     } else {
                         binding.passwordLayout.error = "Incorrect password"
                     }

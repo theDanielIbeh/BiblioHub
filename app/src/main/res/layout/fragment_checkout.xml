@@ -188,7 +188,8 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cvv_layout">
+                app:layout_constraintTop_toBottomOf="@+id/cvv_layout"
+                app:passwordToggleEnabled="true">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/pin_edit_text"
@@ -196,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/pin"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
+                    android:inputType="numberPassword"
                     android:text="@={viewModel.checkoutModel.pin}" />
             </com.google.android.material.textfield.TextInputLayout>
 

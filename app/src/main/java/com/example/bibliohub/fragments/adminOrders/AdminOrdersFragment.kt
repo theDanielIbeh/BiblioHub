@@ -22,11 +22,13 @@ import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.databinding.FragmentAdminOrdersBinding
 import com.example.bibliohub.utils.BaseSearchableFragment
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
+@AndroidEntryPoint
 class AdminOrdersFragment : BaseSearchableFragment<Product>(),
     AdminOrdersPagingDataAdapter.HomeListener {
 
@@ -34,7 +36,7 @@ class AdminOrdersFragment : BaseSearchableFragment<Product>(),
         private val TAG = AdminOrdersFragment::getTag
     }
 
-    private val viewModel: AdminOrdersViewModel by viewModels { AdminOrdersViewModel.Factory }
+    private val viewModel: AdminOrdersViewModel by viewModels()
     private lateinit var binding: FragmentAdminOrdersBinding
     private lateinit var adapter: AdminOrdersPagingDataAdapter
 

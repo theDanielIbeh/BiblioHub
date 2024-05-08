@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,6 +41,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -83,7 +89,7 @@ dependencies {
     kaptTest("com.google.dagger:hilt-android-compiler:2.48")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
 
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation("com.google.code.gson:gson:2.10.1")
 

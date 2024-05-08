@@ -3,7 +3,6 @@ package com.example.bibliohub.utils
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,7 +11,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import com.example.bibliohub.MainActivity
 import com.example.bibliohub.R
 import com.example.bibliohub.data.BiblioHubPreferencesRepository
@@ -56,24 +54,9 @@ object HelperFunctions {
         activity: FragmentActivity,
         biblioHubPreferencesRepository: BiblioHubPreferencesRepository
     ) {
-        // Add menu items without using the Fragment Menu APIs
-        // Note how we can tie the MenuProvider to the viewLifecycleOwner
-        // and an optional Lifecycle.State (here, RESUMED) to indicate when
-        // the menu should be visible
-        val navController =
-            (activity.supportFragmentManager.findFragmentById(R.id.customer_nav_host_fragment) as NavHostFragment).navController
         activity.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
-                menu.findItem(R.id.home_item)?.setChecked(true)
-            }
-
-            override fun onPrepareMenu(menu: Menu) {
-                super.onPrepareMenu(menu)
-                menu.findItem(R.id.admin_home_item)?.setVisible(false)
-                menu.findItem(R.id.order_item)?.setVisible(false)
-                menu.findItem(R.id.home_item)?.setVisible(true)
-                menu.findItem(R.id.cart_item)?.setVisible(true)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -85,77 +68,11 @@ object HelperFunctions {
                         true
                     }
 
-                    R.id.home_item -> {
-                        navController.popBackStack(R.id.homeFragment, false)
-                        true
-                    }
 
                     R.id.log_out -> {
                         activity.lifecycleScope.launch {
                             logout(biblioHubPreferencesRepository, activity)
                         }
-                        true
-                    }
-
-                    R.id.cart_item -> {
-                        navController.navigate(R.id.cartFragment)
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, activity, Lifecycle.State.RESUMED)
-    }
-
-    fun setAdminMenu(
-        activity: FragmentActivity,
-        biblioHubPreferencesRepository: BiblioHubPreferencesRepository
-    ) {
-        // Add menu items without using the Fragment Menu APIs
-        // Note how we can tie the MenuProvider to the viewLifecycleOwner
-        // and an optional Lifecycle.State (here, RESUMED) to indicate when
-        // the menu should be visible
-        val navController =
-            (activity.supportFragmentManager.findFragmentById(R.id.admin_nav_host_fragment) as NavHostFragment).navController
-        activity.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.main_menu, menu)
-                menu.findItem(R.id.admin_home_item)?.setChecked(true)
-            }
-
-            override fun onPrepareMenu(menu: Menu) {
-                super.onPrepareMenu(menu)
-                menu.findItem(R.id.admin_home_item)?.setVisible(true)
-                menu.findItem(R.id.order_item)?.setVisible(true)
-                menu.findItem(R.id.home_item)?.setVisible(false)
-                menu.findItem(R.id.cart_item)?.setVisible(false)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                menuItem.setChecked(true)
-                Log.d("MainActivity", menuItem.itemId.toString())
-                return when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        activity.onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    R.id.admin_home_item -> {
-                        navController.popBackStack(R.id.adminHomeFragment, false)
-                        true
-                    }
-
-                    R.id.log_out -> {
-                        activity.lifecycleScope.launch {
-                            logout(biblioHubPreferencesRepository, activity)
-                        }
-                        true
-                    }
-
-                    R.id.order_item -> {
-                        navController.navigate(R.id.adminOrdersFragment)
                         true
                     }
 

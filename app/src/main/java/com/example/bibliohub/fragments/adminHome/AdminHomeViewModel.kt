@@ -21,12 +21,15 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class AdminHomeViewModel(
+@HiltViewModel
+class AdminHomeViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val productRepository: ProductRepository,
@@ -55,22 +58,22 @@ class AdminHomeViewModel(
         filterText.value = query
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val productRepository = application.container.productRepository
-                val orderRepository = application.container.orderRepository
-                val orderDetailsRepository = application.container.orderDetailsRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                AdminHomeViewModel(
-                    orderRepository = orderRepository,
-                    orderDetailsRepository = orderDetailsRepository,
-                    productRepository = productRepository,
-                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
-                )
-            }
-        }
-    }
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                val application =
+//                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
+//                val productRepository = application.container.productRepository
+//                val orderRepository = application.container.orderRepository
+//                val orderDetailsRepository = application.container.orderDetailsRepository
+//                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
+//                AdminHomeViewModel(
+//                    orderRepository = orderRepository,
+//                    orderDetailsRepository = orderDetailsRepository,
+//                    productRepository = productRepository,
+//                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
+//                )
+//            }
+//        }
+//    }
 }

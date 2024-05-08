@@ -25,13 +25,15 @@ import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.FormFunctions
 import com.example.bibliohub.utils.HelperFunctions
 import com.example.bibliohub.utils.HelperFunctions.displayDatePicker
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@AndroidEntryPoint
 class ProductFormFragment : Fragment() {
 
-    private val viewModel: ProductFormViewModel by viewModels { ProductFormViewModel.Factory }
+    private val viewModel: ProductFormViewModel by viewModels()
     private val args: ProductFormFragmentArgs by navArgs()
     private lateinit var binding: FragmentProductFormBinding
 
@@ -44,11 +46,12 @@ class ProductFormFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        viewModel.resetProductModel()
 
         binding.isImageAvailable = false
 
         viewModel.product = args.product
-        viewModel?.product?.toString()?.let { Log.d("Product", it) }
+        viewModel.product?.toString()?.let { Log.d("Product", it) }
         setBinding()
         viewModel.product?.let { product ->
             viewModel.initializeProductModel(product)
@@ -182,7 +185,7 @@ class ProductFormFragment : Fragment() {
                             }
                         }
                         requireActivity().onBackPressedDispatcher.onBackPressed()
-                        viewModel?.resetProductModel()
+//                        viewModel?.resetProductModel()
                     }
                 } else {
                     Toast.makeText(

@@ -16,9 +16,12 @@ import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductDetailsViewModel(
+@HiltViewModel
+class ProductDetailsViewModel @Inject constructor(
     val orderRepository: OrderRepository,
     val orderDetailsRepository: OrderDetailsRepository,
     private val productRepository: ProductRepository,
@@ -74,24 +77,5 @@ class ProductDetailsViewModel(
         val newOrder = Order(customerId = userId, status = Constants.Status.PENDING, date = "")
         orderRepository.insert(newOrder)
         return newOrder
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val productRepository = application.container.productRepository
-                val orderRepository = application.container.orderRepository
-                val orderDetailsRepository = application.container.orderDetailsRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                ProductDetailsViewModel(
-                    orderRepository = orderRepository,
-                    orderDetailsRepository = orderDetailsRepository,
-                    productRepository = productRepository,
-                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
-                )
-            }
-        }
     }
 }

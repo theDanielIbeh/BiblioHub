@@ -12,18 +12,21 @@ import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class LoginModel(
     var email: String = "",
     var password: String = "",
 )
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val productRepository: ProductRepository,
     val biblioHubPreferencesRepository: BiblioHubPreferencesRepository,
@@ -56,19 +59,19 @@ class LoginViewModel(
             }
         }
     }
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val userRepository = application.container.userRepository
-                val productRepository = application.container.productRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                LoginViewModel(
-                    userRepository = userRepository,
-                    productRepository = productRepository,
-                    biblioHubPreferencesRepository = biblioHubPreferencesRepository)
-            }
-        }
-    }
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                val application =
+//                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
+//                val userRepository = application.container.userRepository
+//                val productRepository = application.container.productRepository
+//                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
+//                LoginViewModel(
+//                    userRepository = userRepository,
+//                    productRepository = productRepository,
+//                    biblioHubPreferencesRepository = biblioHubPreferencesRepository)
+//            }
+//        }
+//    }
 }

@@ -17,10 +17,12 @@ import com.example.bibliohub.fragments.login.LoginViewModel
 import com.example.bibliohub.utils.Constants
 import com.example.bibliohub.utils.Constants.IS_LOGGED_IN
 import com.example.bibliohub.utils.HelperFunctions.createMediaDirectory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+    private val viewModel: LoginViewModel by viewModels()
     private val PERMISSION_REQUEST_CODE = 200
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

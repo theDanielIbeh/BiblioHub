@@ -19,12 +19,15 @@ import com.example.bibliohub.data.entities.product.ProductRepository
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
 import com.example.bibliohub.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
-class AdminOrdersViewModel(
+@HiltViewModel
+class AdminOrdersViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val orderRepository: OrderRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
@@ -81,24 +84,4 @@ class AdminOrdersViewModel(
         }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val userRepository = application.container.userRepository
-                val productRepository = application.container.productRepository
-                val orderRepository = application.container.orderRepository
-                val orderDetailsRepository = application.container.orderDetailsRepository
-                val biblioHubPreferencesRepository = application.biblioHubPreferencesRepository
-                AdminOrdersViewModel(
-                    userRepository = userRepository,
-                    orderRepository = orderRepository,
-                    orderDetailsRepository = orderDetailsRepository,
-                    productRepository = productRepository,
-                    biblioHubPreferencesRepository = biblioHubPreferencesRepository
-                )
-            }
-        }
-    }
 }

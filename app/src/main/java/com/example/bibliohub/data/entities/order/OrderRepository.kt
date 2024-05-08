@@ -8,6 +8,7 @@ import androidx.paging.liveData
 import com.example.bibliohub.data.entities.product.Product
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.utils.Constants
+import javax.inject.Inject
 
 interface OrderRepository {
     suspend fun insert(order: Order)
@@ -18,7 +19,7 @@ interface OrderRepository {
     fun getAllOrders(pageSize: Int): LiveData<PagingData<Order>>
 }
 
-class OfflineOrderRepository(
+class OfflineOrderRepository @Inject constructor(
     private val orderDao: OrderDao
 ) : OrderRepository {
     override suspend fun insert(order: Order) {

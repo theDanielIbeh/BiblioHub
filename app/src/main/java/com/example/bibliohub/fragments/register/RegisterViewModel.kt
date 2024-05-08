@@ -7,10 +7,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bibliohub.BiblioHubApplication
 import com.example.bibliohub.data.entities.user.User
 import com.example.bibliohub.data.entities.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 data class RegisterModel(
     var firstName: String = "",
@@ -20,7 +22,8 @@ data class RegisterModel(
     var confirmPassword: String = "",
 )
 
-class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
     private var _registerModel: MutableStateFlow<RegisterModel> = MutableStateFlow(RegisterModel())
     val registerModel: StateFlow<RegisterModel> = _registerModel.asStateFlow()
 
@@ -47,16 +50,5 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
 
     fun resetRegisterModel() {
         _registerModel.value = RegisterModel()
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BiblioHubApplication)
-                val userRepository = application.container.userRepository
-                RegisterViewModel(userRepository = userRepository)
-            }
-        }
     }
 }

@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
+import javax.inject.Inject
 
 interface ProductRepository {
     suspend fun insert(product: Product)
@@ -18,7 +19,7 @@ interface ProductRepository {
     suspend fun getProductByImageSrc(imgSrc: String): Product?
 }
 
-class OfflineProductRepository(
+class OfflineProductRepository @Inject constructor(
     private val productDao: ProductDao
 ) : ProductRepository {
     override suspend fun insert(product: Product) {
